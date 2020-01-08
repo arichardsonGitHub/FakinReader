@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="FakinReader.Views.TestingPage"
+             Title="{Binding Title}">
+
+    <StackLayout Margin="10,35,10,10">
+        <Button Text="Do something"
+                    HeightRequest="50"
+                    Clicked="OnDoSomethingButtonClickedAsync" />
+        <ListView
+                  x:Name="ItemsListView"
+                  RowHeight="200"
+                  HasUnevenRows="True"
+                  IsPullToRefreshEnabled="True"
+                  ItemsSource="{Binding ListOfSomething}"
+                  RefreshCommand="{Binding RefreshCommand}"
+                  IsRefreshing="{Binding IsRefreshing}"
+                  ItemTapped="ListingListView_ItemTapped">
+            <ListView.Header>
+                <Label FontSize="25" x:Name="ItemCount" TextColor="Black" />
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Margin="20,10">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Label
+                                Text="{Binding Title}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"
+                                FontSize="15" />
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Url}"
+                                HorizontalOptions="End"
+                                VerticalOptions="Center"
+                                FontSize="10" />
+
+                            <BoxView Grid.Row="1"
+                             Grid.ColumnSpan="2"
+                             HeightRequest="1"
+                             BackgroundColor="LightGray" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

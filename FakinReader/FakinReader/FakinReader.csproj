@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Xamarin.Auth" Version="1.7.0" />
+    <PackageReference Include="Xamarin.Auth.XamarinForms" Version="1.7.0" />
+    <PackageReference Include="Xamarin.Forms" Version="4.2.0.709249" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RedditSharp\RedditSharp\RedditSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Mono.Android">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v9.0\Mono.Android.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\AuthorizationPage.xaml.cs">
+      <DependentUpon>AuthorizationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\User\FindUserPage.xaml.cs">
+      <DependentUpon>FindUserPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\User\ProfilePage.xaml.cs">
+      <DependentUpon>ProfilePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\User\ProfileOverviewPage.xaml.cs">
+      <DependentUpon>ProfileOverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Submit\SubmitLinkPostPage.xaml.cs">
+      <DependentUpon>SubmitLinkPostPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Submit\SubmitImagePostPage.xaml.cs">
+      <DependentUpon>SubmitImagePostPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\User\MySubredditsPage.xaml.cs">
+      <DependentUpon>MySubredditsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NavigateToSubredditPage.xaml.cs">
+      <DependentUpon>NavigateToSubredditPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Submit\SubmitTextPostPage.xaml.cs">
+      <DependentUpon>SubmitTextPostPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Submit\SubmitPostPage.xaml.cs">
+      <DependentUpon>SubmitPostPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\User\ManageSubredditsPage.xaml.cs">
+      <DependentUpon>ManageSubredditsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\User\InboxPage.xaml.cs">
+      <DependentUpon>InboxPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SubredditsSelectPage.xaml.cs">
+      <DependentUpon>SubredditsSelectPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\HelpAndSupportPage.xaml.cs">
+      <DependentUpon>HelpAndSupportPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TestingPage.xaml.cs">
+      <DependentUpon>TestingPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>
