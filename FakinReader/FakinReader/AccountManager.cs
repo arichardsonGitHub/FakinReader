@@ -14,7 +14,7 @@ namespace FakinReader.Helpers
         public const string ACCESS_TOKEN_KEY = "FakinReader.AccessToken";
         public const string AUTHORIZATION_CODE_KEY = "FakinReader.AuthorizationCode";
         public const string CURRENT_SESSION_USERNAME = "FakinReader.CurrentSessionUsername";
-        public const string KNOWN_USERS_KEY = "FakinReader.KnownUsers";
+        public const string PREVIOUS_SESSION_USERS = "FakinReader.PreviousSessionUsers";
         public const string REFRESH_TOKEN_KEY = "FakinReader.RefreshToken";
         private static User _applicationUser;
         #endregion Fields
@@ -55,18 +55,24 @@ namespace FakinReader.Helpers
             return authProvider.GetAuthUrl("step1", scopes, true);
         }
 
-        public static Task<List<User>> GetKnownUsers()
-        {
-            List<User> listOfKnownUsers = new List<User>();
 
-            var knownUsers = Preferences.Get(KNOWN_USERS_KEY, null);
+        public static List<User> PreviousSessionUsers
+        {
+            get => GetPreviousSessionUsers().Result;
+        }
+
+        private static Task<List<User>> GetPreviousSessionUsers()
+        {
+            List<User> listOfPreviousSessionUsers = new List<User>();
+
+            var knownUsers = Preferences.Get(PREVIOUS_SESSION_USERS, null);
 
             if (knownUsers != null)
             {
-                listOfKnownUsers = JsonConvert.DeserializeObject<List<User>>(knownUsers);
+                listOfPreviousSessionUsers = JsonConvert.DeserializeObject<List<User>>(knownUsers);
             }
 
-            return Task.FromResult(listOfKnownUsers);
+            return Task.FromResult(listOfPreviousSessionUsers);
         }
 
         public static async Task<User> GetLoggedInUser()
