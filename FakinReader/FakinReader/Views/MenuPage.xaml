@@ -8,6 +8,45 @@
              Title="Menu">
 
     <StackLayout VerticalOptions="FillAndExpand">
+        <StackLayout>
+            <StackLayout>
+                <StackLayout Orientation="Horizontal" Padding="0,10,10,0">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ExpandHideData}" />
+                    </StackLayout.GestureRecognizers>
+                    <Label Text="{Binding AccountManager.ApplicationUser.Username}" FontSize="12" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label HorizontalOptions="EndAndExpand" Text="{Binding ExpanderButtonText}" />
+                </StackLayout>
+                <BoxView HeightRequest="1" Color="Gray" HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+            <StackLayout Padding="10,0,0,0" HeightRequest="{Binding ExpandedHeight}">
+
+
+
+                <ListView x:Name="AccountManagermentListView" HasUnevenRows="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="5,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding IconSource}" />
+                                    <Label Grid.Column="1" Text="{Binding Title}" />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+
+
+
+
+            </StackLayout>
+        </StackLayout>
+        <BoxView HeightRequest="1" Color="Gray" HorizontalOptions="FillAndExpand" />
         <ListView x:Name="ListViewMenu" HasUnevenRows="True">
             <ListView.ItemTemplate>
                 <DataTemplate>

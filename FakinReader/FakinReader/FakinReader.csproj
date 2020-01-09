@@ -24,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\AccountManagementPage.xaml.cs">
+      <DependentUpon>AccountManagementPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\AuthorizationPage.xaml.cs">
       <DependentUpon>AuthorizationPage.xaml</DependentUpon>
     </Compile>

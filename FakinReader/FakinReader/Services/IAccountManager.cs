@@ -6,11 +6,11 @@ namespace FakinReader.Services
     public interface IAccountManager
     {
         #region Properties
-        User ApplicationUser { get; set; }
-        List<User> PreviousSessionUsers { get; }
-        ISettingsManager SettingsManager { get; }
-        string RefreshTokenKey { get; }
         string AccessTokenKey { get; }
+        User ApplicationUser { get; set; }
+        List<string> PreviousSessionUsers { get; }
+        string RefreshTokenKey { get; }
+        ISettingsManager SettingsManager { get; }
         #endregion Properties
 
         #region Methods

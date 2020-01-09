@@ -6,6 +6,8 @@
         FindUser,
         HelpAndSupport,
         Inbox,
+        LogIn,
+        LogOut,
         ManageSubreddits,
         Profile,
         Settings,

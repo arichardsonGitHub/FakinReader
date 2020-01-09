@@ -3,6 +3,7 @@ using FakinReader.Models.Enums;
 using FakinReader.Services;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace FakinReader.Views
@@ -17,19 +18,102 @@ namespace FakinReader.Views
             InitializeComponent();
 
             SetMenuItems();
+
+            BindingContext = this;
         }
         #endregion Constructors
 
         #region Fields
+        protected string _ExpanderButtonText = "+";
+        private List<HomeMenuItem> _accountManagementItems;
+        private int _ExpandingHeight = 0;
         private List<HomeMenuItem> _menuItems;
         #endregion Fields
 
         #region Properties
         public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
+
+        public int ExpandedHeight
+        {
+            get
+            {
+                return _ExpandingHeight;
+            }
+            private set
+            {
+                _ExpandingHeight = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public string ExpanderButtonText
+        {
+            get
+            {
+                return _ExpanderButtonText;
+            }
+            private set
+            {
+                _ExpanderButtonText = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand ExpandHideData
+        {
+            get
+            {
+                return new Command(() =>
+                {
+                    if (ExpanderButtonText == "+")
+                    {
+                        ExpandedHeight = 200;
+
+                        ExpanderButtonText = "-";
+                    }
+                    else
+                    {
+                        ExpandedHeight = 0;
+
+                        ExpanderButtonText = "+";
+                    }
+                });
+            }
+        }
+
         private MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         #endregion Properties
 
         #region Methods
+
+        private void SetAccountManagementMenuItems()
+        {
+            _accountManagementItems = new List<HomeMenuItem>();
+
+            if (AccountManager.ApplicationUser == null)
+            {
+            }
+            else
+            {
+                _accountManagementItems.Add(new HomeMenuItem { Id = MenuItemType.LogOut, Title = "Log out", IconSource = "img_87237.png" });
+
+
+            }
+
+            AccountManager.PreviousSessionUsers.ForEach(username =>
+            {
+                _accountManagementItems.Add(new HomeMenuItem { Id = MenuItemType.LogIn, Title = username });
+            });
+
+            AccountManagermentListView.ItemsSource = _accountManagementItems;
+
+            AccountManagermentListView.ItemSelected += async (sender, e) =>
+            {
+                await AccountManager.LogCurrentUserOut();
+            };
+        }
 
         private void SetMenuItems()
         {
@@ -77,6 +161,8 @@ namespace FakinReader.Views
 
                 await RootPage.NavigateFromMenu(id);
             };
+
+            SetAccountManagementMenuItems();
         }
         #endregion Methods
     }

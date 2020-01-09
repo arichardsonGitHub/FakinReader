@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using System.Linq;
 
 namespace FakinReader.Services
 {
@@ -13,14 +14,14 @@ namespace FakinReader.Services
         #region Fields
         public const string AUTHORIZATION_CODE_KEY = "FakinReader.AuthorizationCode";
         public const string CURRENT_SESSION_USERNAME = "FakinReader.CurrentSessionUsername";
-        public const string PREVIOUS_SESSION_USERS = "FakinReader.PreviousSessionUsers";
+        public const string PREVIOUS_SESSION_USERS_KEY = "FakinReader.PreviousSessionUsers";
         private const string ACCESS_TOKEN_KEY = "FakinReader.AccessToken";
         private const string REFRESH_TOKEN_KEY = "FakinReader.RefreshToken";
         private User _applicationUser;
         #endregion Fields
 
         #region Properties
-        public string AccessTokenKey { get => ACCESS_TOKEN_KEY; }
+        public string AccessTokenKey => ACCESS_TOKEN_KEY;
 
         public User ApplicationUser
         {
@@ -35,6 +36,8 @@ namespace FakinReader.Services
                 if (_applicationUser != null)
                 {
                     SettingsManager.SaveSetting(CURRENT_SESSION_USERNAME, _applicationUser.Username);
+
+                    AddToPreviousSessionUsers(value.Username);
                 }
                 else
                 {
@@ -43,12 +46,12 @@ namespace FakinReader.Services
             }
         }
 
-        public List<User> PreviousSessionUsers
+        public List<string> PreviousSessionUsers
         {
             get => GetPreviousSessionUsers().Result;
         }
 
-        public string RefreshTokenKey { get => REFRESH_TOKEN_KEY; }
+        public string RefreshTokenKey => REFRESH_TOKEN_KEY;
         public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
         #endregion Properties
 
@@ -100,6 +103,10 @@ namespace FakinReader.Services
                 SettingsManager.SaveSetting(ACCESS_TOKEN_KEY, null);
 
                 SettingsManager.SaveSetting(REFRESH_TOKEN_KEY, null);
+
+                SettingsManager.SaveSetting(CURRENT_SESSION_USERNAME, null);
+
+                ApplicationUser = null;
 
                 return Task.FromResult(true);
             }
@@ -162,18 +169,32 @@ namespace FakinReader.Services
             webView.IsVisible = true;
         }
 
-        private Task<List<User>> GetPreviousSessionUsers()
+        private Task<List<string>> GetPreviousSessionUsers()
         {
-            List<User> listOfPreviousSessionUsers = new List<User>();
+            var listOfPreviousSessionUsers = new List<string>();
 
-            var knownUsers = Preferences.Get(PREVIOUS_SESSION_USERS, null);
+            var knownUsers = Preferences.Get(PREVIOUS_SESSION_USERS_KEY, null);
 
             if (knownUsers != null)
             {
-                listOfPreviousSessionUsers = JsonConvert.DeserializeObject<List<User>>(knownUsers);
+                listOfPreviousSessionUsers = JsonConvert.DeserializeObject<List<string>>(knownUsers);
             }
 
             return Task.FromResult(listOfPreviousSessionUsers);
+        }
+
+        public async void AddToPreviousSessionUsers(string username)
+        {
+            var listOfPreviousSessionUsers = await GetPreviousSessionUsers();
+
+            if (listOfPreviousSessionUsers.Contains(username) == false)
+            {
+                listOfPreviousSessionUsers.Add(username);
+            }
+
+            var toSave = JsonConvert.SerializeObject(listOfPreviousSessionUsers);
+
+            SettingsManager.SaveSetting(PREVIOUS_SESSION_USERS_KEY, toSave);
         }
         #endregion Methods
     }

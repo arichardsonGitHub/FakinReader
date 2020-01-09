@@ -37,6 +37,10 @@ namespace FakinReader.Views
             {
                 switch (id)
                 {
+                    case (int)MenuItemType.LogOut:
+                        MenuPages.Add(id, new NavigationPage(new TestingPage()));
+                        break;
+
                     case (int)MenuItemType.FindUser:
                         MenuPages.Add(id, new NavigationPage(new FindUserPage()));
                         break;
@@ -72,6 +76,7 @@ namespace FakinReader.Views
                     case (int)MenuItemType.Testing:
                         MenuPages.Add(id, new NavigationPage(new TestingPage()));
                         break;
+
                 }
             }
 
