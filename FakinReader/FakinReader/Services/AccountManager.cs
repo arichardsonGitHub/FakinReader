@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json; 
+﻿using Newtonsoft.Json;
 using RedditSharp;
 using System;
 using System.Collections.Generic;
@@ -6,22 +6,23 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace FakinReader.Helpers
+namespace FakinReader.Services
 {
-    public class AccountManager
+    public class AccountManager : IAccountManager
     {
         #region Fields
-        public const string ACCESS_TOKEN_KEY = "FakinReader.AccessToken";
         public const string AUTHORIZATION_CODE_KEY = "FakinReader.AuthorizationCode";
         public const string CURRENT_SESSION_USERNAME = "FakinReader.CurrentSessionUsername";
         public const string PREVIOUS_SESSION_USERS = "FakinReader.PreviousSessionUsers";
-        public const string REFRESH_TOKEN_KEY = "FakinReader.RefreshToken";
-        private static User _applicationUser;
+        private const string ACCESS_TOKEN_KEY = "FakinReader.AccessToken";
+        private const string REFRESH_TOKEN_KEY = "FakinReader.RefreshToken";
+        private User _applicationUser;
         #endregion Fields
 
         #region Properties
+        public string AccessTokenKey { get => ACCESS_TOKEN_KEY; }
 
-        public static User ApplicationUser
+        public User ApplicationUser
         {
             get
             {
@@ -42,40 +43,27 @@ namespace FakinReader.Helpers
             }
         }
 
+        public List<User> PreviousSessionUsers
+        {
+            get => GetPreviousSessionUsers().Result;
+        }
+
+        public string RefreshTokenKey { get => REFRESH_TOKEN_KEY; }
+        public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
         #endregion Properties
 
         #region Methods
 
-        public static string GetAuthorizationUrl()
+        public string GetAuthorizationUrl()
         {
-            var authProvider = new AuthProvider(AuthenticationHelper.CLIENT_ID, null, AuthenticationHelper.REDIRECT_URL);
+            var authProvider = new AuthProvider(AuthenticationManager.CLIENT_ID, null, AuthenticationManager.REDIRECT_URL);
 
             var scopes = AuthProvider.Scope.edit | AuthProvider.Scope.flair | AuthProvider.Scope.history | AuthProvider.Scope.identity | AuthProvider.Scope.modconfig | AuthProvider.Scope.modflair | AuthProvider.Scope.modlog | AuthProvider.Scope.modposts | AuthProvider.Scope.modwiki | AuthProvider.Scope.mysubreddits | AuthProvider.Scope.privatemessages | AuthProvider.Scope.read | AuthProvider.Scope.report | AuthProvider.Scope.save | AuthProvider.Scope.submit | AuthProvider.Scope.subscribe | AuthProvider.Scope.vote | AuthProvider.Scope.wikiedit | AuthProvider.Scope.wikiread;
 
             return authProvider.GetAuthUrl("step1", scopes, true);
         }
 
-
-        public static List<User> PreviousSessionUsers
-        {
-            get => GetPreviousSessionUsers().Result;
-        }
-
-        private static Task<List<User>> GetPreviousSessionUsers()
-        {
-            List<User> listOfPreviousSessionUsers = new List<User>();
-
-            var knownUsers = Preferences.Get(PREVIOUS_SESSION_USERS, null);
-
-            if (knownUsers != null)
-            {
-                listOfPreviousSessionUsers = JsonConvert.DeserializeObject<List<User>>(knownUsers);
-            }
-
-            return Task.FromResult(listOfPreviousSessionUsers);
-        }
-
-        public static async Task<User> GetLoggedInUser()
+        public async Task<User> GetLoggedInUser()
         {
             var currentUserLoggedIn = SettingsManager.GetSetting(CURRENT_SESSION_USERNAME);
 
@@ -89,7 +77,7 @@ namespace FakinReader.Helpers
             }
         }
 
-        public static Task LoadLoggedInUser()
+        public Task LoadLoggedInUser()
         {
             try
             {
@@ -105,7 +93,7 @@ namespace FakinReader.Helpers
             }
         }
 
-        public static Task<bool> LogCurrentUserOut()
+        public Task<bool> LogCurrentUserOut()
         {
             try
             {
@@ -121,14 +109,14 @@ namespace FakinReader.Helpers
             }
         }
 
-        public static Task<bool> LogUserIn(string userName)
+        public Task<bool> LogUserIn(string userName)
         {
             var user = new User(userName, null, null);
 
             return LogUserIn(user);
         }
 
-        public static Task<bool> LogUserIn(User user)
+        public Task<bool> LogUserIn(User user)
         {
             try
             {
@@ -144,7 +132,7 @@ namespace FakinReader.Helpers
             }
         }
 
-        public static async Task<bool> SecureSave(string accessToken, string refreshToken, string authorizationCode, string userName = null)
+        public async Task<bool> SecureSave(string accessToken, string refreshToken, string authorizationCode, string userName = null)
         {
             try
             {
@@ -164,7 +152,7 @@ namespace FakinReader.Helpers
             }
         }
 
-        public static void SendToActivate()
+        public void SendToActivate()
         {
             WebView webView = new WebView
             {
@@ -172,6 +160,20 @@ namespace FakinReader.Helpers
             };
 
             webView.IsVisible = true;
+        }
+
+        private Task<List<User>> GetPreviousSessionUsers()
+        {
+            List<User> listOfPreviousSessionUsers = new List<User>();
+
+            var knownUsers = Preferences.Get(PREVIOUS_SESSION_USERS, null);
+
+            if (knownUsers != null)
+            {
+                listOfPreviousSessionUsers = JsonConvert.DeserializeObject<List<User>>(knownUsers);
+            }
+
+            return Task.FromResult(listOfPreviousSessionUsers);
         }
         #endregion Methods
     }

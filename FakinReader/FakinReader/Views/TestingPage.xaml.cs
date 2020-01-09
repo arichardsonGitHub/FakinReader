@@ -65,27 +65,27 @@ namespace FakinReader.Views
 
         #region Methods
 
-        private async Task<Post> AddAPost()
-        {
-            var reddit = AuthenticationHelper.GetRedditObject();
+        //private async Task<Post> AddAPost()
+        //{
+        //    var reddit = AuthenticationManager.GetRedditObject();
 
-            var drumsSubredditTask = reddit.GetSubredditAsync("drums");
+        //    var drumsSubredditTask = reddit.GetSubredditAsync("drums");
 
-            var drumsSubreddit = drumsSubredditTask.Result;
+        //    var drumsSubreddit = drumsSubredditTask.Result;
 
-            var newPost = await drumsSubreddit.SubmitPostAsync("Just testing", "https://forums.xamarin.com/discussion/169887/how-to-fix-xamarin-forms-build-error-failed-to-create-javatypeinfo-for-class");
+        //    var newPost = await drumsSubreddit.SubmitPostAsync("Just testing", "https://forums.xamarin.com/discussion/169887/how-to-fix-xamarin-forms-build-error-failed-to-create-javatypeinfo-for-class");
 
-            ListOfSomething = new ObservableCollection<Post>
-            {
-                newPost
-            };
+        //    ListOfSomething = new ObservableCollection<Post>
+        //    {
+        //        newPost
+        //    };
 
-            ItemsListView.ItemsSource = ListOfSomething;
+        //    ItemsListView.ItemsSource = ListOfSomething;
 
-            ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
+        //    ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
 
-            return newPost;
-        }
+        //    return newPost;
+        //}
 
         private async Task AddUserToKnownUsersAsync()
         {

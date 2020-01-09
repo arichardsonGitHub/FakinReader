@@ -1,9 +1,10 @@
 ﻿using RedditSharp;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
-namespace FakinReader.Helpers
+namespace FakinReader.Services
 {
-    public class AuthenticationHelper
+    public class AuthenticationManager : IAuthenticationManager
     {
         #region Fields
         public const string CLIENT_ID = "aoJ6tnu56BmRDQ";
@@ -13,9 +14,10 @@ namespace FakinReader.Helpers
         #endregion Fields
 
         #region Properties
-        public static AuthProvider AuthProvider => new AuthProvider(CLIENT_ID, null, REDIRECT_URL);
+        public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
+        public AuthProvider AuthProvider => new AuthProvider(CLIENT_ID, null, REDIRECT_URL);
 
-        public static Reddit Reddit
+        public Reddit Reddit
         {
             get
             {
@@ -28,13 +30,14 @@ namespace FakinReader.Helpers
             }
         }
 
+        public string RedirectUrl => REDIRECT_URL;
         #endregion Properties
 
         #region Methods
 
-        public static Reddit GetRedditObject()
+        public Reddit GetRedditObject()
         {
-            var rwa = new RefreshTokenWebAgent(GetSetting(AccountManager.REFRESH_TOKEN_KEY), CLIENT_ID, null, REDIRECT_URL)
+            var rwa = new RefreshTokenWebAgent(GetSetting(AccountManager.RefreshTokenKey), CLIENT_ID, null, REDIRECT_URL)
             {
                 UserAgent = USER_AGENT
             };
@@ -42,17 +45,17 @@ namespace FakinReader.Helpers
             return new Reddit(rwa, true);
         }
 
-        public static string GetSetting(string key)
+        public string GetSetting(string key)
         {
             return Preferences.Get(key, null);
         }
 
-        public static void RemoveSetting(string key)
+        public void RemoveSetting(string key)
         {
             Preferences.Remove(key);
         }
 
-        public static void SaveSetting(string key, string value)
+        public void SaveSetting(string key, string value)
         {
             if (string.IsNullOrEmpty(value) == false)
             {
@@ -63,7 +66,6 @@ namespace FakinReader.Helpers
                 Preferences.Set(key, null);
             }
         }
-
         #endregion Methods
     }
 }

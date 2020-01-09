@@ -1,4 +1,4 @@
-﻿using FakinReader.Helpers;
+﻿using FakinReader.Services;
 using System.ComponentModel;
 using Xamarin.Forms;
 
@@ -15,11 +15,15 @@ namespace FakinReader.Views.Submit
         }
         #endregion Constructors
 
+        #region Properties
+        public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
+        #endregion Properties
+
         #region Methods
 
         private async void OnSubmitButtonClicked(object sender, System.EventArgs e)
         {
-            var reddit = AuthenticationHelper.Reddit;
+            var reddit = AuthenticationManager.Reddit;
 
             var targetSubredditTask = reddit.GetSubredditAsync(TargetSubreddit.Text.Trim());
 

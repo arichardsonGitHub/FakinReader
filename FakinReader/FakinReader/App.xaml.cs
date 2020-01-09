@@ -14,6 +14,12 @@ namespace FakinReader
 
             DependencyService.Register<MockDataStore>();
 
+            DependencyService.Register<SettingsManager>();
+
+            DependencyService.Register<AccountManager>();
+
+            DependencyService.Register<AuthenticationManager>();
+
             MainPage = new MainPage();
         }
         #endregion Constructors

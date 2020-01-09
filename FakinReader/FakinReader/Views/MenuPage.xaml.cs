@@ -1,14 +1,12 @@
-﻿using FakinReader.Helpers;
-using FakinReader.Models;
+﻿using FakinReader.Models;
 using FakinReader.Models.Enums;
+using FakinReader.Services;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Xamarin.Forms;
 
 namespace FakinReader.Views
 {
-    // Learn more about making custom code visible in the Xamarin.Forms previewer
-    // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
     public partial class MenuPage : ContentPage
     {
@@ -18,6 +16,23 @@ namespace FakinReader.Views
         {
             InitializeComponent();
 
+            SetMenuItems();
+        }
+        #endregion Constructors
+
+        #region Fields
+        private List<HomeMenuItem> _menuItems;
+        #endregion Fields
+
+        #region Properties
+        public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
+        private MainPage RootPage { get => Application.Current.MainPage as MainPage; }
+        #endregion Properties
+
+        #region Methods
+
+        private void SetMenuItems()
+        {
             AccountManager.LoadLoggedInUser();
 
             if (AccountManager.ApplicationUser == null)
@@ -63,14 +78,6 @@ namespace FakinReader.Views
                 await RootPage.NavigateFromMenu(id);
             };
         }
-        #endregion Constructors
-
-        #region Fields
-        private List<HomeMenuItem> _menuItems;
-        #endregion Fields
-
-        #region Properties
-        private MainPage RootPage { get => Application.Current.MainPage as MainPage; }
-        #endregion Properties
+        #endregion Methods
     }
 }

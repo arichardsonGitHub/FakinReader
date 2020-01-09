@@ -6,12 +6,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using FakinReader.Services;
 
 namespace FakinReader.Views.User
 {
     [DesignTimeVisible(false)]
     public partial class MySubredditsPage : ContentPage
     {
+        public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
+
         #region Constructors
 
         public MySubredditsPage()
@@ -69,7 +72,7 @@ namespace FakinReader.Views.User
             {
                 IsRefreshing = true;
 
-                var mySubreddits = AuthenticationHelper.Reddit.User.GetSubscribedSubreddits();
+                var mySubreddits = AuthenticationManager.Reddit.User.GetSubscribedSubreddits();
 
                 ListOfMySubreddits = new ObservableCollection<Subreddit>();
 
