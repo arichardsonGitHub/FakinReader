@@ -18,6 +18,9 @@ namespace FakinReader.Views
         {
             InitializeComponent();
         }
+        #endregion Constructors
+
+        #region Methods
 
         protected override void OnAppearing()
         {
@@ -25,11 +28,9 @@ namespace FakinReader.Views
 
             webView.Source = AuthenticationHelper.GetAuthorizationUrl();
 
-
             webView.Navigated += WebView_Navigated;
 
             webView.Navigating += WebView_NavigatingAsync;
-
         }
 
         private async Task<NameValueCollection> ParseQueryString(string s)
@@ -71,8 +72,16 @@ namespace FakinReader.Views
             AuthenticationHelper.TokenFromAuthorization = tokens;
 
             await AuthenticationHelper.SecureSave();
-
         }
+
+        private void WebView_Navigated(object sender, WebNavigatedEventArgs e)
+        {
+            if (e.Url.ToUpper().StartsWith(AuthenticationHelper.REDIRECT_URL.ToUpper()))
+            {
+                Navigation.PopAsync();
+            }
+        }
+
         private async void WebView_NavigatingAsync(object sender, WebNavigatingEventArgs e)
         {
             if (e.Url.ToUpper().Contains("&CODE"))
@@ -81,21 +90,14 @@ namespace FakinReader.Views
 
                 var reddit = AuthenticationHelper.GetRedditObject();
 
-                var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.AccessToken, AuthenticationHelper.RefreshToken);
+                //var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.AccessToken, AuthenticationHelper.RefreshToken);
+                var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.ApplicationUser.AccessToken, AuthenticationHelper.RefreshToken);
 
                 AuthenticationHelper.SaveSetting(AuthenticationHelper.LAST_ACTIVE_USER_KEY, user.Username);
 
                 await AuthenticationHelper.SaveUserAsync(user);
             }
         }
-
-        private void WebView_Navigated(object sender, WebNavigatedEventArgs e)
-        {
-            if (e.Url.ToUpper().StartsWith(AuthenticationHelper.REDIRECT_URL.ToUpper()))
-            {                
-                Navigation.PopAsync();
-            }
-        }
-        #endregion Constructors
+        #endregion Methods
     }
 }

@@ -1,7 +1,6 @@
 ﻿using FakinReader.Helpers;
 using RedditSharp.Things;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -66,15 +65,6 @@ namespace FakinReader.Views
 
         #region Methods
 
-        private async Task AddUserToKnownUsersAsync()
-        {
-            var reddit = AuthenticationHelper.GetRedditObject();
-
-            var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.AccessToken, AuthenticationHelper.RefreshToken);
-
-            await AuthenticationHelper.SaveUserAsync(user);
-        }
-
         private async Task<Post> AddAPost()
         {
             var reddit = AuthenticationHelper.GetRedditObject();
@@ -97,6 +87,15 @@ namespace FakinReader.Views
             return newPost;
         }
 
+        private async Task AddUserToKnownUsersAsync()
+        {
+            //var reddit = AuthenticationHelper.GetRedditObject();
+
+            //var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.ApplicationUser.AccessToken, AuthenticationHelper.RefreshToken);
+
+            //await AuthenticationHelper.SaveUserAsync(user);
+        }
+
         private void ListingListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (e.Item is Post post)
@@ -111,7 +110,6 @@ namespace FakinReader.Views
 
             SimulateCheckingForAuthenticationAsync();
         }
-
 
         private void SetLastActiveUser(string userName)
         {
@@ -128,7 +126,7 @@ namespace FakinReader.Views
             }
             else
             {
-                await Navigation.PushAsync(new AuthorizationPage());                
+                await Navigation.PushAsync(new AuthorizationPage());
             }
         }
         #endregion Methods

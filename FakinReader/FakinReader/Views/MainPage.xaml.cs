@@ -1,5 +1,4 @@
-﻿using FakinReader.Models;
-using FakinReader.Models.Enums;
+﻿using FakinReader.Models.Enums;
 using FakinReader.Views.Submit;
 using FakinReader.Views.User;
 using System.Collections.Generic;

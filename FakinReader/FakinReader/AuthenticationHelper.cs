@@ -15,18 +15,21 @@ namespace FakinReader.Helpers
         #region Fields
         public const string ACCESS_TOKEN_KEY = "FakinReader.AccessToken";
         public const string CLIENT_ID = "aoJ6tnu56BmRDQ";
+        public const string CURRENT_USERNAME_LOGGED_IN = "FakinReader.CurrentUserNameLoggedIn";
         public const string KNOWN_USERS_KEY = "FakinReader.KnownUsers";
+        public const string LAST_ACTIVE_USER_KEY = "FakinReader.LastActiveUser";
         public const string REDIRECT_URL = "red://FakinReader.companyname.com/oauth2redirect";
         public const string REFRESH_TOKEN_KEY = "FakinReader.RefreshToken";
         public const string USER_AGENT = "FakinReader";
-        public const string LAST_ACTIVE_USER_KEY = "FakinReader.LastActiveUser";
         public static string AuthorizationCode;
         public static WebRedirectAuthenticator WebRedirectAuthenticator;
         private static Reddit _reddit;
         #endregion Fields
 
         #region Properties
-        public static string AccessToken => GetSetting("FakinReader.AccessToken");
+        public static User ApplicationUser { get; set; }
+
+        //public static string AccessToken => GetSetting("FakinReader.AccessToken");
 
         public static AuthProvider AuthProvider => new AuthProvider(CLIENT_ID, null, REDIRECT_URL);
 
@@ -80,6 +83,36 @@ namespace FakinReader.Helpers
             return Task.FromResult(listOfKnownUsers);
         }
 
+        public static async Task<User> GetLastActiveUser()
+        {
+            var lastActiveUsername = GetSetting(LAST_ACTIVE_USER_KEY);
+
+            if (string.IsNullOrEmpty(lastActiveUsername) != true)
+            {
+                var listOfKnownUsers = await GetKnownUsers();
+
+                var lastKnownActiveUser = listOfKnownUsers.Where(x => x.Username.ToUpper() == lastActiveUsername.ToUpper()).FirstOrDefault();
+
+                return lastKnownActiveUser;
+            }
+
+            return null;
+        }
+
+        public static async Task<User> GetLoggedInUser()
+        {
+            var currentUserLoggedIn = GetSetting(CURRENT_USERNAME_LOGGED_IN);
+
+            if (string.IsNullOrEmpty(currentUserLoggedIn) == false)
+            {
+                return new User(GetSetting(CURRENT_USERNAME_LOGGED_IN), GetSetting(ACCESS_TOKEN_KEY), GetSetting(REFRESH_TOKEN_KEY)); //Task.FromResult(new User(GetSetting(CURRENT_USERNAME_LOGGED_IN), GetSetting(ACCESS_TOKEN_KEY), GetSetting(REFRESH_TOKEN_KEY)));
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         //todo: move this into a different class. I'm just being lazy for now
         public static Reddit GetRedditObject()
         {
@@ -96,14 +129,73 @@ namespace FakinReader.Helpers
             return Preferences.Get(key, null);
         }
 
-        public static void SaveSetting(string key, string value)
+        public static Task LoadLoggedInUser()
         {
-            Preferences.Set(key, value);
+            try
+            {
+                var currentUserLoggedIn = GetLoggedInUser();
+
+                ApplicationUser = GetLoggedInUser().Result;
+
+                return Task.FromResult(true);
+            }
+            catch (Exception exception)
+            {
+                return Task.FromResult(exception);
+            }
+        }
+
+        public static Task<bool> LogCurrentUserOut()
+        {
+            try
+            {
+                SaveSetting(ACCESS_TOKEN_KEY, null);
+
+                SaveSetting(REFRESH_TOKEN_KEY, null);
+
+                SaveSetting(LAST_ACTIVE_USER_KEY, null);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception exception)
+            {
+                return Task.FromResult(false);
+            }
+        }
+
+        public static Task<bool> LogUserIn(string userName)
+        {
+            var user = new User(userName, null, null);
+
+            return LogUserIn(user);
+        }
+
+        public static Task<bool> LogUserIn(User user)
+        {
+            try
+            {
+                SaveSetting(ACCESS_TOKEN_KEY, user.AccessToken);
+
+                SaveSetting(REFRESH_TOKEN_KEY, user.RefreshToken);
+
+                SaveSetting(LAST_ACTIVE_USER_KEY, user.Username);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception exception)
+            {
+                return Task.FromResult(false);
+            }
         }
 
         public static void RemoveSetting(string key)
         {
             Preferences.Remove(key);
+        }
+
+        public static void SaveSetting(string key, string value)
+        {
+            Preferences.Set(key, value);
         }
 
         public static async Task SaveUserAsync(User user)
@@ -145,6 +237,16 @@ namespace FakinReader.Helpers
             }
         }
 
+        public static void SendToActivate()
+        {
+            WebView webView = new WebView
+            {
+                Source = GetAuthorizationUrl()
+            };
+
+            webView.IsVisible = true;
+        }
+
         public static bool UserHasAuthorizedThisApp()
         {
             try
@@ -156,66 +258,7 @@ namespace FakinReader.Helpers
                 return false;
             }
         }
-
-        public static async Task<User> GetLastActiveUser()
-        {
-            var lastActiveUsername = GetSetting(LAST_ACTIVE_USER_KEY);
-
-            if (string.IsNullOrEmpty(lastActiveUsername) != true)
-            {
-                var listOfKnownUsers = await GetKnownUsers();
-
-                var lastKnownActiveUser = listOfKnownUsers.Where(x => x.Username.ToUpper() == lastActiveUsername.ToUpper()).FirstOrDefault();
-
-                return lastKnownActiveUser;
-            }
-
-            return null;
-
-        }
-
-        public static Task<bool> LogUserIn(string userName)
-        {
-            var user = new User(userName, null, null);
-
-            return LogUserIn(user);
-        }
-
-        public static Task<bool> LogUserIn(User user)
-        {
-            try
-            {
-                SaveSetting(ACCESS_TOKEN_KEY, user.AccessToken);
-
-                SaveSetting(REFRESH_TOKEN_KEY, user.RefreshToken);
-
-                SaveSetting(LAST_ACTIVE_USER_KEY, user.Username);
-
-                return Task.FromResult(true);
-            }
-            catch(Exception exception)
-            {
-                return Task.FromResult(false);
-            }
-        }
-
-        public static Task<bool> LogCurrentUserOut()
-        {
-            try
-            {
-                SaveSetting(ACCESS_TOKEN_KEY, null);
-
-                SaveSetting(REFRESH_TOKEN_KEY, null);
-
-                SaveSetting(LAST_ACTIVE_USER_KEY, null);
-
-                return Task.FromResult(true);
-            }
-            catch (Exception exception)
-            {
-                return Task.FromResult(false);
-            }
-        }
+        #endregion Methods
 
         //public static void SendToActivate()
         //{
@@ -224,25 +267,5 @@ namespace FakinReader.Helpers
         //    if(TokenFromAuthorization != null)
         //    {
         //        var reddit = GetRedditObject();
-
-        //        if(reddit != null)
-        //        {
-        //        }
-        //    }
-        //}
-        public static void SendToActivate()
-        {
-            WebView webView = new WebView
-            {
-                Source = GetAuthorizationUrl()
-            };
-
-
-            webView.IsVisible = true;            
-        }
-
-
-
-        #endregion Methods
     }
 }

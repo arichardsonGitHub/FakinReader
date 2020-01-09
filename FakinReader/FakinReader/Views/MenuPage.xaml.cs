@@ -18,7 +18,9 @@ namespace FakinReader.Views
         {
             InitializeComponent();
 
-            if (AuthenticationHelper.UserHasAuthorizedThisApp() == false)
+            AuthenticationHelper.LoadLoggedInUser();
+
+            if (AuthenticationHelper.ApplicationUser == null)
             {
                 _menuItems = new List<HomeMenuItem>
                 {
@@ -26,8 +28,7 @@ namespace FakinReader.Views
                     new HomeMenuItem {Id = MenuItemType.Subreddit, Title="Subreddit", IconSource="img_75613.png"},
                     new HomeMenuItem {Id = MenuItemType.Settings, Title="Settings", IconSource="img_242.png"},
                     new HomeMenuItem {Id = MenuItemType.HelpAndSupport, Title="Help And Support", IconSource="img_1313.png"},
-                   new HomeMenuItem {Id = MenuItemType.Testing, Title="test", IconSource="img_513433.png" }
-
+                    new HomeMenuItem {Id = MenuItemType.Testing, Title="test", IconSource="img_513433.png" }
                 };
             }
             else
