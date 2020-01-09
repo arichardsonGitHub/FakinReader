@@ -108,26 +108,32 @@ namespace FakinReader.Views
         {
             //SetLastActiveUser();
 
-            SimulateCheckingForAuthenticationAsync();
+            //SimulateCheckingForAuthenticationAsync();
+
+            //AuthenticationHelper.SendToActivate();
+
+
+
+             Navigation.PushAsync(new AuthorizationPage());
         }
 
         private void SetLastActiveUser(string userName)
         {
-            AuthenticationHelper.SaveSetting(AuthenticationHelper.LAST_ACTIVE_USER_KEY, userName);
+            //AuthenticationHelper.SaveSetting(AuthenticationHelper.LAST_ACTIVE_USER_KEY, userName);
         }
 
         private async Task SimulateCheckingForAuthenticationAsync()
         {
-            var lastActiveUser = await AuthenticationHelper.GetLastActiveUser();
+            //var lastActiveUser = await AuthenticationHelper.GetLastActiveUser();
 
-            if (lastActiveUser != null)
-            {
-                await AuthenticationHelper.LogUserIn(lastActiveUser);
-            }
-            else
-            {
-                await Navigation.PushAsync(new AuthorizationPage());
-            }
+            //if (lastActiveUser != null)
+            //{
+            //    await AuthenticationHelper.LogUserIn(lastActiveUser);
+            //}
+            //else
+            //{
+            //    await Navigation.PushAsync(new AuthorizationPage());
+            //}
         }
         #endregion Methods
     }

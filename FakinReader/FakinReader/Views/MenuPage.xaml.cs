@@ -18,9 +18,9 @@ namespace FakinReader.Views
         {
             InitializeComponent();
 
-            AuthenticationHelper.LoadLoggedInUser();
+            AccountManager.LoadLoggedInUser();
 
-            if (AuthenticationHelper.ApplicationUser == null)
+            if (AccountManager.ApplicationUser == null)
             {
                 _menuItems = new List<HomeMenuItem>
                 {

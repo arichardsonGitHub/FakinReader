@@ -2,13 +2,15 @@
 {
     public class User
     {
-        public User(string userName, string accessToken, string refreshToken)
+        public User(string userName, string accessToken, string refreshToken, string authorizationCodeForSession=null)
         {
             Username = userName;
 
             AccessToken = accessToken;
 
             RefreshToken = refreshToken;
+
+            AuthorizationCodeForSession = authorizationCodeForSession;
         }
 
         #region Properties
@@ -16,6 +18,7 @@
         public bool HasAuthorizedThisApp => string.IsNullOrEmpty(RefreshToken) == false;
         public string RefreshToken { get; set; }
         public string Username { get; set; }
+        public string AuthorizationCodeForSession { get; set; }
         #endregion Properties
     }
 }

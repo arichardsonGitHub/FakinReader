@@ -1,7 +1,5 @@
 ﻿using FakinReader.Helpers;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -26,52 +24,26 @@ namespace FakinReader.Views
         {
             base.OnAppearing();
 
-            webView.Source = AuthenticationHelper.GetAuthorizationUrl();
+            webView.Source = AccountManager.GetAuthorizationUrl();
 
             webView.Navigated += WebView_Navigated;
 
             webView.Navigating += WebView_NavigatingAsync;
         }
 
-        private async Task<NameValueCollection> ParseQueryString(string s)
+        private async Task LogUserInFromAuthenticationCode(string urlWithAuthenticationCode)
         {
-            var nameValueCollection = new NameValueCollection();
+            var parsed = await Helpers.Helpers.ParseQueryString(urlWithAuthenticationCode);
 
-            // remove anything other than query string from url
-            if (s.Contains("?"))
-            {
-                s = s.Substring(s.IndexOf('?') + 1);
-            }
+            var tokens = await AuthenticationHelper.AuthProvider.GetOAuthRefreshTokenFromCodeAsync(parsed.Get("code"));
 
-            foreach (string vp in Regex.Split(s, "&"))
-            {
-                var singlePair = Regex.Split(vp, "=");
+            await AccountManager.SecureSave(tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
 
-                if (singlePair.Length == 2)
-                {
-                    nameValueCollection.Add(singlePair[0], singlePair[1]);
-                }
-                else
-                {
-                    // only one key with no value specified in query string
-                    nameValueCollection.Add(singlePair[0], string.Empty);
-                }
-            }
+            var reddit = AuthenticationHelper.GetRedditObject();
 
-            return nameValueCollection;
-        }
+            var user = new FakinReader.User(reddit.User.Name, tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
 
-        private async Task SaveAuthorizationFromUrlParameter(string url)
-        {
-            var parsedQuery = await ParseQueryString(url);
-
-            AuthenticationHelper.AuthorizationCode = parsedQuery.Get("code");
-
-            var tokens = await AuthenticationHelper.AuthProvider.GetOAuthRefreshTokenFromCodeAsync(AuthenticationHelper.AuthorizationCode);
-
-            AuthenticationHelper.TokenFromAuthorization = tokens;
-
-            await AuthenticationHelper.SecureSave();
+            AccountManager.ApplicationUser = user;
         }
 
         private void WebView_Navigated(object sender, WebNavigatedEventArgs e)
@@ -86,16 +58,7 @@ namespace FakinReader.Views
         {
             if (e.Url.ToUpper().Contains("&CODE"))
             {
-                await SaveAuthorizationFromUrlParameter(e.Url);
-
-                var reddit = AuthenticationHelper.GetRedditObject();
-
-                //var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.AccessToken, AuthenticationHelper.RefreshToken);
-                var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.ApplicationUser.AccessToken, AuthenticationHelper.RefreshToken);
-
-                AuthenticationHelper.SaveSetting(AuthenticationHelper.LAST_ACTIVE_USER_KEY, user.Username);
-
-                await AuthenticationHelper.SaveUserAsync(user);
+                await LogUserInFromAuthenticationCode(e.Url);
             }
         }
         #endregion Methods
