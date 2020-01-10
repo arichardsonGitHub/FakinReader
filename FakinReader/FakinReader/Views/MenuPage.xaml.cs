@@ -92,34 +92,45 @@ namespace FakinReader.Views
         {
             _accountManagementItems = new List<HomeMenuItem>();
 
-            if (AccountManager.ApplicationUser == null)
+            if (AccountManager.ActiveUser == null)
             {
             }
             else
             {
                 _accountManagementItems.Add(new HomeMenuItem { Id = MenuItemType.LogOut, Title = "Log out", IconSource = "img_87237.png" });
-
-
             }
 
-            AccountManager.PreviousSessionUsers.ForEach(username =>
+            AccountManager.SavedUsers.ForEach(user =>
             {
-                _accountManagementItems.Add(new HomeMenuItem { Id = MenuItemType.LogIn, Title = username });
+                _accountManagementItems.Add(new HomeMenuItem { Id = MenuItemType.LogIn, Title = user.Username });
             });
 
             AccountManagermentListView.ItemsSource = _accountManagementItems;
 
+
             AccountManagermentListView.ItemSelected += async (sender, e) =>
             {
-                await AccountManager.LogCurrentUserOut();
+
+                var id = (int)((HomeMenuItem)e.SelectedItem).Id;
+
+                switch (id)
+                {
+                    case (int)MenuItemType.LogOut:
+                        await AccountManager.LogOut();
+                        break;
+
+                    case (int)MenuItemType.LogIn:
+                        AccountManager.MakeUserActive(((HomeMenuItem)e.SelectedItem).Title);
+                        break;
+                }
+
+
             };
         }
 
         private void SetMenuItems()
         {
-            AccountManager.LoadLoggedInUser();
-
-            if (AccountManager.ApplicationUser == null)
+            if (AccountManager.ActiveUser == null)
             {
                 _menuItems = new List<HomeMenuItem>
                 {

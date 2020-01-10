@@ -6,10 +6,12 @@ namespace FakinReader.Services
     public interface IAccountManager
     {
         #region Properties
-        string AccessTokenKey { get; }
-        User ApplicationUser { get; set; }
-        List<string> PreviousSessionUsers { get; }
-        string RefreshTokenKey { get; }
+        string ActiveAccessTokenKey { get; }
+        string ActiveRefreshTokenKey { get; }
+        User ActiveUser { get; }
+        string ActiveUserNameKey { get; }
+        string AuthorizationCodeKey { get; }
+        List<User> SavedUsers { get; }
         ISettingsManager SettingsManager { get; }
         #endregion Properties
 
@@ -17,17 +19,13 @@ namespace FakinReader.Services
 
         string GetAuthorizationUrl();
 
-        Task<User> GetLoggedInUser();
+        Task<bool> LogOut();
 
-        Task LoadLoggedInUser();
+        void MakeUserActive(string username);
 
-        Task<bool> LogCurrentUserOut();
+        void SaveUser(User user);
 
-        Task<bool> LogUserIn(string userName);
-
-        Task<bool> LogUserIn(User user);
-
-        Task<bool> SecureSave(string accessToken, string refreshToken, string authorizationCode, string userName = null);
+        Task<bool> SecureSave(string authorizationCode, string userName = null);
 
         void SendToActivate();
         #endregion Methods

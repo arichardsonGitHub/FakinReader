@@ -2,56 +2,67 @@
 using RedditSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using System.Linq;
 
 namespace FakinReader.Services
 {
     public class AccountManager : IAccountManager
     {
         #region Fields
-        public const string AUTHORIZATION_CODE_KEY = "FakinReader.AuthorizationCode";
-        public const string CURRENT_SESSION_USERNAME = "FakinReader.CurrentSessionUsername";
-        public const string PREVIOUS_SESSION_USERS_KEY = "FakinReader.PreviousSessionUsers";
-        private const string ACCESS_TOKEN_KEY = "FakinReader.AccessToken";
-        private const string REFRESH_TOKEN_KEY = "FakinReader.RefreshToken";
-        private User _applicationUser;
+        private const string ACTIVE_ACCESS_TOKEN_KEY = "FakinReader.ActiveAccessToken";
+        private const string ACTIVE_REFRESH_TOKEN_KEY = "FakinReader.ActiveRefreshToken";
+        private const string ACTIVE_USER_NAME_KEY = "FakinReader.ActiveUserName";
+        private const string AUTHORIZATION_CODE_KEY = "FakinReader.AuthorizationCode";
+        private const string SAVED_USERS_KEY = "FakinReader.SavedUsers";
+        private User _activeUser;
+        private List<User> _savedUsers;
         #endregion Fields
 
         #region Properties
-        public string AccessTokenKey => ACCESS_TOKEN_KEY;
+        public string ActiveAccessTokenKey => ACTIVE_ACCESS_TOKEN_KEY;
 
-        public User ApplicationUser
+        public string ActiveRefreshTokenKey => ACTIVE_REFRESH_TOKEN_KEY;
+
+        public User ActiveUser
         {
             get
             {
-                return _applicationUser;
-            }
-            set
-            {
-                _applicationUser = value;
-
-                if (_applicationUser != null)
+                if (_activeUser == null)
                 {
-                    SettingsManager.SaveSetting(CURRENT_SESSION_USERNAME, _applicationUser.Username);
+                    var currentActiveUser = SettingsManager.GetSetting(ACTIVE_USER_NAME_KEY);
 
-                    AddToPreviousSessionUsers(value.Username);
+                    if (string.IsNullOrEmpty(currentActiveUser) == false)
+                    {
+                        _activeUser = SavedUsers.Where(x => x.Username.ToUpper() == currentActiveUser.ToUpper()).Single();
+                    }
                 }
-                else
-                {
-                    SettingsManager.SaveSetting(CURRENT_SESSION_USERNAME, null);
-                }
+
+                return _activeUser;
             }
         }
 
-        public List<string> PreviousSessionUsers
+        public string ActiveUserNameKey => ACTIVE_USER_NAME_KEY;
+
+        public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
+
+        public string AuthorizationCodeKey => AUTHORIZATION_CODE_KEY;
+
+        public List<User> SavedUsers
         {
-            get => GetPreviousSessionUsers().Result;
+            get
+            {
+                if (_savedUsers == null)
+                {
+                    _savedUsers = GetSavedUsers().Result;
+                }
+
+                return _savedUsers;
+            }
         }
 
-        public string RefreshTokenKey => REFRESH_TOKEN_KEY;
         public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
         #endregion Properties
 
@@ -59,97 +70,86 @@ namespace FakinReader.Services
 
         public string GetAuthorizationUrl()
         {
-            var authProvider = new AuthProvider(AuthenticationManager.CLIENT_ID, null, AuthenticationManager.REDIRECT_URL);
-
             var scopes = AuthProvider.Scope.edit | AuthProvider.Scope.flair | AuthProvider.Scope.history | AuthProvider.Scope.identity | AuthProvider.Scope.modconfig | AuthProvider.Scope.modflair | AuthProvider.Scope.modlog | AuthProvider.Scope.modposts | AuthProvider.Scope.modwiki | AuthProvider.Scope.mysubreddits | AuthProvider.Scope.privatemessages | AuthProvider.Scope.read | AuthProvider.Scope.report | AuthProvider.Scope.save | AuthProvider.Scope.submit | AuthProvider.Scope.subscribe | AuthProvider.Scope.vote | AuthProvider.Scope.wikiedit | AuthProvider.Scope.wikiread;
 
-            return authProvider.GetAuthUrl("step1", scopes, true);
+            return AuthenticationManager.AuthProvider.GetAuthUrl("step1", scopes, true);
         }
 
-        public async Task<User> GetLoggedInUser()
+        public Task<bool> LogOut()
         {
-            var currentUserLoggedIn = SettingsManager.GetSetting(CURRENT_SESSION_USERNAME);
-
-            if (string.IsNullOrEmpty(currentUserLoggedIn) == false)
+            try
             {
-                return new User(SettingsManager.GetSetting(CURRENT_SESSION_USERNAME), SettingsManager.GetSetting(ACCESS_TOKEN_KEY), SettingsManager.GetSetting(REFRESH_TOKEN_KEY));
+                SettingsManager.SaveSetting(ACTIVE_USER_NAME_KEY, null);
+
+                SettingsManager.SaveSetting(ACTIVE_ACCESS_TOKEN_KEY, null);
+
+                SettingsManager.SaveSetting(ACTIVE_REFRESH_TOKEN_KEY, null);
+
+                _activeUser = null;
+
+                var savedUsers = GetSavedUsers().Result;
+
+                foreach (var user in savedUsers)
+                {
+                    user.AccessToken = null;
+
+                    user.AuthorizationCodeForSession = null;
+
+                    user.RefreshToken = null;
+                }
+
+                return Task.FromResult(true);
+            }
+            catch (Exception exception)
+            {
+                return Task.FromResult(false);
+            }
+        }
+
+        public void MakeUserActive(string username)
+        {
+            var existingUser = SavedUsers.Where(x => x.Username.ToUpper() == username.ToUpper()).Single();
+
+            if (existingUser.HasAuthorizedThisApp == false)
+            {
+                SendToActivate();
             }
             else
             {
-                return null;
+
+                SettingsManager.SaveSetting(ACTIVE_USER_NAME_KEY, existingUser.Username);
+
+                SettingsManager.SaveSetting(ACTIVE_ACCESS_TOKEN_KEY, existingUser.AccessToken);
+
+                SettingsManager.SaveSetting(ACTIVE_REFRESH_TOKEN_KEY, existingUser.RefreshToken);
             }
         }
 
-        public Task LoadLoggedInUser()
+        public async void SaveUser(User user)
+        {
+            var listOfSavedUsers = await GetSavedUsers();
+
+            var existingUser = listOfSavedUsers.Where(x => x.Username.ToUpper() == user.Username.ToUpper()).FirstOrDefault();
+
+            if (existingUser != null)
+            {
+                listOfSavedUsers.Remove(existingUser);
+            }
+
+            listOfSavedUsers.Add(user);
+
+            var toSave = JsonConvert.SerializeObject(listOfSavedUsers);
+
+            SettingsManager.SaveSetting(SAVED_USERS_KEY, toSave);
+        }
+
+        public async Task<bool> SecureSave(string authorizationCode, string userName = null)
         {
             try
             {
-                var currentUserLoggedIn = GetLoggedInUser();
-
-                ApplicationUser = GetLoggedInUser().Result;
-
-                return Task.FromResult(true);
-            }
-            catch (Exception exception)
-            {
-                return Task.FromResult(exception);
-            }
-        }
-
-        public Task<bool> LogCurrentUserOut()
-        {
-            try
-            {
-                SettingsManager.SaveSetting(ACCESS_TOKEN_KEY, null);
-
-                SettingsManager.SaveSetting(REFRESH_TOKEN_KEY, null);
-
-                SettingsManager.SaveSetting(CURRENT_SESSION_USERNAME, null);
-
-                ApplicationUser = null;
-
-                return Task.FromResult(true);
-            }
-            catch (Exception exception)
-            {
-                return Task.FromResult(false);
-            }
-        }
-
-        public Task<bool> LogUserIn(string userName)
-        {
-            var user = new User(userName, null, null);
-
-            return LogUserIn(user);
-        }
-
-        public Task<bool> LogUserIn(User user)
-        {
-            try
-            {
-                SettingsManager.SaveSetting(ACCESS_TOKEN_KEY, user.AccessToken);
-
-                SettingsManager.SaveSetting(REFRESH_TOKEN_KEY, user.RefreshToken);
-
-                return Task.FromResult(true);
-            }
-            catch (Exception exception)
-            {
-                return Task.FromResult(false);
-            }
-        }
-
-        public async Task<bool> SecureSave(string accessToken, string refreshToken, string authorizationCode, string userName = null)
-        {
-            try
-            {
-                SettingsManager.SaveSetting(ACCESS_TOKEN_KEY, accessToken);
-
-                SettingsManager.SaveSetting(REFRESH_TOKEN_KEY, refreshToken);
-
                 SettingsManager.SaveSetting(AUTHORIZATION_CODE_KEY, authorizationCode);
 
-                SettingsManager.SaveSetting(CURRENT_SESSION_USERNAME, userName);
+                SettingsManager.SaveSetting(ACTIVE_USER_NAME_KEY, userName);
 
                 return true;
             }
@@ -169,32 +169,24 @@ namespace FakinReader.Services
             webView.IsVisible = true;
         }
 
-        private Task<List<string>> GetPreviousSessionUsers()
+        private Task<List<User>> GetSavedUsers()
         {
-            var listOfPreviousSessionUsers = new List<string>();
+            var savedUsers = new List<User>();
 
-            var knownUsers = Preferences.Get(PREVIOUS_SESSION_USERS_KEY, null);
+            var savedUsersSerialized = Preferences.Get(SAVED_USERS_KEY, null);
 
-            if (knownUsers != null)
+            try
             {
-                listOfPreviousSessionUsers = JsonConvert.DeserializeObject<List<string>>(knownUsers);
+                if (savedUsersSerialized != null)
+                {
+                    savedUsers = JsonConvert.DeserializeObject<List<User>>(savedUsersSerialized);
+                }
+            }
+            catch (Exception e)
+            {
             }
 
-            return Task.FromResult(listOfPreviousSessionUsers);
-        }
-
-        public async void AddToPreviousSessionUsers(string username)
-        {
-            var listOfPreviousSessionUsers = await GetPreviousSessionUsers();
-
-            if (listOfPreviousSessionUsers.Contains(username) == false)
-            {
-                listOfPreviousSessionUsers.Add(username);
-            }
-
-            var toSave = JsonConvert.SerializeObject(listOfPreviousSessionUsers);
-
-            SettingsManager.SaveSetting(PREVIOUS_SESSION_USERS_KEY, toSave);
+            return Task.FromResult(savedUsers);
         }
         #endregion Methods
     }

@@ -11,16 +11,9 @@ namespace FakinReader.Services
 
         string RedirectUrl { get; }
         #endregion Properties
-
-        #region Methods
-
-        Reddit GetRedditObject();
-
-        string GetSetting(string key);
-
-        void RemoveSetting(string key);
-
-        void SaveSetting(string key, string value);
-        #endregion Methods
     }
 }
+
+
+
+

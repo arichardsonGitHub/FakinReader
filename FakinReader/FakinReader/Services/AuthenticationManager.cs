@@ -1,5 +1,4 @@
 ﻿using RedditSharp;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace FakinReader.Services
@@ -7,15 +6,16 @@ namespace FakinReader.Services
     public class AuthenticationManager : IAuthenticationManager
     {
         #region Fields
-        public const string CLIENT_ID = "aoJ6tnu56BmRDQ";
-        public const string REDIRECT_URL = "red://FakinReader.companyname.com/oauth2redirect";
-        public const string USER_AGENT = "FakinReader";
+        private const string CLIENT_ID = "aoJ6tnu56BmRDQ";
+        private const string REDIRECT_URL = "red://FakinReader.companyname.com/oauth2redirect";
+        private const string USER_AGENT = "FakinReader";
         private static Reddit _reddit;
         #endregion Fields
 
         #region Properties
         public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
         public AuthProvider AuthProvider => new AuthProvider(CLIENT_ID, null, REDIRECT_URL);
+        public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
 
         public Reddit Reddit
         {
@@ -35,35 +35,33 @@ namespace FakinReader.Services
 
         #region Methods
 
-        public Reddit GetRedditObject()
+        private Reddit GetRedditObject()
         {
-            var rwa = new RefreshTokenWebAgent(GetSetting(AccountManager.RefreshTokenKey), CLIENT_ID, null, REDIRECT_URL)
+            RefreshTokenWebAgent refreshTokenWebAgent;
+
+            if (AccountManager.ActiveUser != null)
             {
-                UserAgent = USER_AGENT
-            };
+                refreshTokenWebAgent = new RefreshTokenWebAgent(AccountManager.ActiveUser.RefreshToken, CLIENT_ID, null, REDIRECT_URL)
+                {
+                    UserAgent = USER_AGENT
+                };
 
-            return new Reddit(rwa, true);
-        }
+                return new Reddit(refreshTokenWebAgent, true);
 
-        public string GetSetting(string key)
-        {
-            return Preferences.Get(key, null);
-        }
-
-        public void RemoveSetting(string key)
-        {
-            Preferences.Remove(key);
-        }
-
-        public void SaveSetting(string key, string value)
-        {
-            if (string.IsNullOrEmpty(value) == false)
+            }
+            else if (SettingsManager.GetSetting(AccountManager.ActiveRefreshTokenKey) != null)
             {
-                Preferences.Set(key, value);
+                refreshTokenWebAgent = new RefreshTokenWebAgent(SettingsManager.GetSetting(AccountManager.ActiveRefreshTokenKey), CLIENT_ID, null, REDIRECT_URL)
+                {
+                    UserAgent = USER_AGENT
+                };
+
+                return new Reddit(refreshTokenWebAgent, true);
+
             }
             else
             {
-                Preferences.Set(key, null);
+                return null;
             }
         }
         #endregion Methods

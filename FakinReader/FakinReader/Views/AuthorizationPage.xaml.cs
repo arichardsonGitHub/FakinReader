@@ -20,6 +20,8 @@ namespace FakinReader.Views
         public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
 
         public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
+
+        public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
         #endregion Properties
 
         #region Methods
@@ -35,19 +37,25 @@ namespace FakinReader.Views
             webView.Navigating += WebView_NavigatingAsync;
         }
 
-        private async Task LogUserInFromAuthenticationCode(string urlWithAuthenticationCode)
+        private async Task Authenticate(string urlWithAuthenticationCode)
         {
             var parsed = await Helpers.Helpers.ParseQueryString(urlWithAuthenticationCode);
 
             var tokens = await AuthenticationManager.AuthProvider.GetOAuthRefreshTokenFromCodeAsync(parsed.Get("code"));
 
-            await AccountManager.SecureSave(tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
+            await AccountManager.SecureSave(parsed.Get("code"));
 
-            var reddit = AuthenticationManager.GetRedditObject();
+            SettingsManager.SaveSetting(AccountManager.AuthorizationCodeKey, parsed.Get("code"));
 
-            var user = new FakinReader.User(reddit.User.Name, tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
+            SettingsManager.SaveSetting(AccountManager.ActiveRefreshTokenKey, tokens.RefreshToken);
 
-            AccountManager.ApplicationUser = user;
+            SettingsManager.SaveSetting(AccountManager.ActiveAccessTokenKey, tokens.AccessToken);
+
+            var user = new FakinReader.User(AuthenticationManager.Reddit.User.Name, tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
+
+            AccountManager.SaveUser(user);
+
+            SettingsManager.SaveSetting(AccountManager.ActiveUserNameKey, user.Username);
         }
 
         private void WebView_Navigated(object sender, WebNavigatedEventArgs e)
@@ -62,7 +70,12 @@ namespace FakinReader.Views
         {
             if (e.Url.ToUpper().Contains("&CODE"))
             {
-                await LogUserInFromAuthenticationCode(e.Url);
+                await Authenticate(e.Url);
+            }
+
+            if(e.Url.ToUpper() == "HTTPS://WWW.REDDIT.COM/")
+            {
+                webView.Source = AccountManager.GetAuthorizationUrl();
             }
         }
         #endregion Methods
