@@ -25,7 +25,6 @@ namespace FakinReader.Views
         #endregion Properties
 
         #region Methods
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -39,6 +38,8 @@ namespace FakinReader.Views
 
         private async Task Authenticate(string urlWithAuthenticationCode)
         {
+            await AccountManager.LogOutAllAccounts();
+
             var parsed = await Helpers.Helpers.ParseQueryString(urlWithAuthenticationCode);
 
             var tokens = await AuthenticationManager.AuthProvider.GetOAuthRefreshTokenFromCodeAsync(parsed.Get("code"));
@@ -51,9 +52,9 @@ namespace FakinReader.Views
 
             SettingsManager.SaveSetting(AccountManager.ActiveAccessTokenKey, tokens.AccessToken);
 
-            var user = new FakinReader.User(AuthenticationManager.Reddit.User.Name, tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
+            var user = new Account(AuthenticationManager.Reddit.User.Name, tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
 
-            AccountManager.SaveUser(user);
+            AccountManager.SaveAccount(user);
 
             SettingsManager.SaveSetting(AccountManager.ActiveUserNameKey, user.Username);
         }
@@ -63,6 +64,8 @@ namespace FakinReader.Views
             if (e.Url.ToUpper().StartsWith(AuthenticationManager.RedirectUrl.ToUpper()))
             {
                 Navigation.PopAsync();
+                
+                Application.Current.MainPage = new MainPage();
             }
         }
 

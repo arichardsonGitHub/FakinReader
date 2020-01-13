@@ -1,4 +1,4 @@
-﻿using FakinReader.Helpers;
+﻿using FakinReader.ViewModels;
 using RedditSharp.Things;
 using System;
 using System.Collections.ObjectModel;
@@ -10,8 +10,6 @@ using Xamarin.Forms;
 
 namespace FakinReader.Views
 {
-    // Learn more about making custom code visible in the Xamarin.Forms previewer
-    // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
     public partial class TestingPage : ContentPage
     {
@@ -20,12 +18,15 @@ namespace FakinReader.Views
         public TestingPage()
         {
             InitializeComponent();
+
+            BindingContext = viewModel = new TestingPageViewModel();
         }
         #endregion Constructors
 
         #region Fields
         private bool _isRefreshing;
         private ObservableCollection<Post> _listOfSomething;
+        private TestingPageViewModel viewModel;
         #endregion Fields
 
         #region Properties
@@ -63,8 +64,6 @@ namespace FakinReader.Views
 
         #endregion Properties
 
-        #region Methods
-
         //private async Task<Post> AddAPost()
         //{
         //    var reddit = AuthenticationManager.GetRedditObject();
@@ -87,14 +86,7 @@ namespace FakinReader.Views
         //    return newPost;
         //}
 
-        private async Task AddUserToKnownUsersAsync()
-        {
-            //var reddit = AuthenticationHelper.GetRedditObject();
-
-            //var user = new FakinReader.User(reddit.User.Name, AuthenticationHelper.ApplicationUser.AccessToken, AuthenticationHelper.RefreshToken);
-
-            //await AuthenticationHelper.SaveUserAsync(user);
-        }
+        #region Methods
 
         private void ListingListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
@@ -112,9 +104,7 @@ namespace FakinReader.Views
 
             //AuthenticationHelper.SendToActivate();
 
-
-
-             Navigation.PushAsync(new AuthorizationPage());
+            Navigation.PushAsync(new AuthorizationPage());
         }
 
         private void SetLastActiveUser(string userName)

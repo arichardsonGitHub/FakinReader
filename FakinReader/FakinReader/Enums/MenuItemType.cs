@@ -2,12 +2,13 @@
 {
     public enum MenuItemType
     {
+        AddAccount,
         Home,
         FindUser,
         HelpAndSupport,
         Inbox,
-        LogIn,
-        LogOut,
+        MakeAccountActive,
+        LogAllAccountsOut,
         ManageSubreddits,
         Profile,
         Settings,

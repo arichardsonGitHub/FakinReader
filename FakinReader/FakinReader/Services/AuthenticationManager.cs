@@ -34,20 +34,18 @@ namespace FakinReader.Services
         #endregion Properties
 
         #region Methods
-
         private Reddit GetRedditObject()
         {
             RefreshTokenWebAgent refreshTokenWebAgent;
 
-            if (AccountManager.ActiveUser != null)
+            if (AccountManager.ActiveAccount != null && AccountManager.ActiveAccount.Username.ToUpper() != "LOGGED OUT")
             {
-                refreshTokenWebAgent = new RefreshTokenWebAgent(AccountManager.ActiveUser.RefreshToken, CLIENT_ID, null, REDIRECT_URL)
+                refreshTokenWebAgent = new RefreshTokenWebAgent(AccountManager.ActiveAccount.RefreshToken, CLIENT_ID, null, REDIRECT_URL)
                 {
                     UserAgent = USER_AGENT
                 };
 
                 return new Reddit(refreshTokenWebAgent, true);
-
             }
             else if (SettingsManager.GetSetting(AccountManager.ActiveRefreshTokenKey) != null)
             {
@@ -57,7 +55,6 @@ namespace FakinReader.Services
                 };
 
                 return new Reddit(refreshTokenWebAgent, true);
-
             }
             else
             {

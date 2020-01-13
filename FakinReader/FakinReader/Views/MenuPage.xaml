@@ -14,16 +14,30 @@
                     <StackLayout.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ExpandHideData}" />
                     </StackLayout.GestureRecognizers>
-                    <Label Text="{Binding AccountManager.ApplicationUser.Username}" FontSize="12" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label x:Name="ActiveUser" Text="{Binding ActiveAccount.Username}" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
                     <Label HorizontalOptions="EndAndExpand" Text="{Binding ExpanderButtonText}" />
                 </StackLayout>
                 <BoxView HeightRequest="1" Color="Gray" HorizontalOptions="FillAndExpand" />
             </StackLayout>
             <StackLayout Padding="10,0,0,0" HeightRequest="{Binding ExpandedHeight}">
+                <ListView x:Name="AccountManagementListView" HasUnevenRows="True" ItemsSource="{Binding AccountManagementMenuItems}" ItemSelected="AccountManagementListView_ItemSelected">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid Padding="5,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding IconSource}" />
+                                    <Label Grid.Column="1" Text="{Binding Title}" />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-
-
-                <ListView x:Name="AccountManagermentListView" HasUnevenRows="True">
+                <ListView x:Name="AccountManagementListViewSavedAccounts" HasUnevenRows="True" ItemsSource="{Binding SavedAccounts}" ItemSelected="AccountManagementListView_ItemSelected">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -41,13 +55,10 @@
                 </ListView>
 
 
-
-
-
             </StackLayout>
         </StackLayout>
         <BoxView HeightRequest="1" Color="Gray" HorizontalOptions="FillAndExpand" />
-        <ListView x:Name="ListViewMenu" HasUnevenRows="True">
+        <ListView x:Name="MainListViewMenu" HasUnevenRows="True" ItemsSource="{Binding MainMenuItems}" ItemSelected="MainListViewMenu_ItemSelected">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

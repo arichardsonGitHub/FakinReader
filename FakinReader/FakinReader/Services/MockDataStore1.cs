@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace FakinReader.Services
 {
-    public class MockDataStore : IDataStore<Item>
+    public class MockDataStore1 : IDataStore<Item>
     {
         #region Constructors
 
-        public MockDataStore()
+        public MockDataStore1()
         {
             items = new List<Item>()
             {
-                new Item { Id = Guid.NewGuid().ToString(), Text = "First item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Second item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Third item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Fifth item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), Text = "Sixth item", Description="This is an item description." }
+                new Item { Id = Guid.NewGuid().ToString(), Text = "First item, first data store", Description="This is an item description." },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Second item, first data store", Description="This is an item description." },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Third item, first data store", Description="This is an item description." },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Fourth item, first data store", Description="This is an item description." },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Fifth item, first data store", Description="This is an item description." },
+                new Item { Id = Guid.NewGuid().ToString(), Text = "Sixth item, first data store", Description="This is an item description." }
             };
         }
         #endregion Constructors

@@ -8,13 +8,10 @@ using Xamarin.Forms;
 
 namespace FakinReader.Views
 {
-    // Learn more about making custom code visible in the Xamarin.Forms previewer
-    // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
     public partial class MainPage : MasterDetailPage
     {
         #region Constructors
-
         public MainPage()
         {
             InitializeComponent();
@@ -30,14 +27,17 @@ namespace FakinReader.Views
         #endregion Fields
 
         #region Methods
-
         public async Task NavigateFromMenu(int id)
         {
             if (!MenuPages.ContainsKey(id))
             {
                 switch (id)
                 {
-                    case (int)MenuItemType.LogOut:
+                    case (int)MenuItemType.AddAccount:
+                        MenuPages.Add(id, new NavigationPage(new AuthorizationPage()));
+                        break;
+
+                    case (int)MenuItemType.LogAllAccountsOut:
                         MenuPages.Add(id, new NavigationPage(new TestingPage()));
                         break;
 
@@ -76,7 +76,6 @@ namespace FakinReader.Views
                     case (int)MenuItemType.Testing:
                         MenuPages.Add(id, new NavigationPage(new TestingPage()));
                         break;
-
                 }
             }
 

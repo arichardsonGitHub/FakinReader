@@ -1,8 +1,10 @@
-﻿namespace FakinReader
+﻿using System.ComponentModel;
+
+namespace FakinReader
 {
-    public class User
+    public class Account : INotifyPropertyChanged
     {
-        public User(string userName, string accessToken, string refreshToken, string authorizationCodeForSession=null)
+        public Account(string userName, string accessToken, string refreshToken, string authorizationCodeForSession=null)
         {
             Username = userName;
 
@@ -20,5 +22,17 @@
         public string Username { get; set; }
         public string AuthorizationCodeForSession { get; set; }
         #endregion Properties
+
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 }
+
+

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FakinReader.ViewModels;
+using Newtonsoft.Json;
 using RedditSharp;
 using System;
 using System.Collections.Generic;
@@ -9,60 +10,64 @@ using Xamarin.Forms;
 
 namespace FakinReader.Services
 {
-    public class AccountManager : IAccountManager
+    public class AccountManager : BaseViewModel, IAccountManager
     {
+        public AccountManager()
+        {
+            _savedAccounts = GetSavedAccounts().Result;
+
+            _activeAccount = new Account(LOGGED_OUT, null, null);
+        }
+
         #region Fields
         private const string ACTIVE_ACCESS_TOKEN_KEY = "FakinReader.ActiveAccessToken";
         private const string ACTIVE_REFRESH_TOKEN_KEY = "FakinReader.ActiveRefreshToken";
-        private const string ACTIVE_USER_NAME_KEY = "FakinReader.ActiveUserName";
+        private const string ACTIVE_ACCOUNT_USERNAME_KEY = "FakinReader.ActiveAccountUserName";
         private const string AUTHORIZATION_CODE_KEY = "FakinReader.AuthorizationCode";
-        private const string SAVED_USERS_KEY = "FakinReader.SavedUsers";
-        private User _activeUser;
-        private List<User> _savedUsers;
+        private const string SAVED_ACCOUNTS_KEY = "FakinReader.SavedAccounts";
+        private const string LOGGED_OUT = "Logged out";
+        private Account _activeAccount;
+        private List<Account> _savedAccounts;
         #endregion Fields
 
         #region Properties
         public string ActiveAccessTokenKey => ACTIVE_ACCESS_TOKEN_KEY;
-
-        public string ActiveRefreshTokenKey => ACTIVE_REFRESH_TOKEN_KEY;
-
-        public User ActiveUser
+        public Account ActiveAccount
         {
             get
             {
-                if (_activeUser == null)
+                if (_activeAccount == null || _activeAccount.Username.ToUpper() == LOGGED_OUT.ToUpper() )
                 {
-                    var currentActiveUser = SettingsManager.GetSetting(ACTIVE_USER_NAME_KEY);
+                    var currentActiveUser = SettingsManager.GetSetting(ACTIVE_ACCOUNT_USERNAME_KEY);
 
                     if (string.IsNullOrEmpty(currentActiveUser) == false)
                     {
-                        _activeUser = SavedUsers.Where(x => x.Username.ToUpper() == currentActiveUser.ToUpper()).Single();
+                        _activeAccount = SavedAccounts.Where(x => x.Username.ToUpper() == currentActiveUser.ToUpper()).Single();
                     }
                 }
 
-                return _activeUser;
+                return _activeAccount;
             }
-        }
-
-        public string ActiveUserNameKey => ACTIVE_USER_NAME_KEY;
-
-        public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
-
-        public string AuthorizationCodeKey => AUTHORIZATION_CODE_KEY;
-
-        public List<User> SavedUsers
-        {
-            get
+            set
             {
-                if (_savedUsers == null)
-                {
-                    _savedUsers = GetSavedUsers().Result;
-                }
-
-                return _savedUsers;
+                SetProperty(ref _activeAccount, value, "ActiveAccount");
             }
         }
-
+        public string ActiveRefreshTokenKey => ACTIVE_REFRESH_TOKEN_KEY;
+        public string ActiveUserNameKey => ACTIVE_ACCOUNT_USERNAME_KEY;
+        public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
+        public string AuthorizationCodeKey => AUTHORIZATION_CODE_KEY;
+        public List<Account> SavedAccounts
+        {
+            get 
+            { 
+                return _savedAccounts; 
+            }
+            private set 
+            { 
+                SetProperty(ref _savedAccounts, value, "SavedAccounts");
+            }
+        }
         public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
         #endregion Properties
 
@@ -75,19 +80,17 @@ namespace FakinReader.Services
             return AuthenticationManager.AuthProvider.GetAuthUrl("step1", scopes, true);
         }
 
-        public Task<bool> LogOut()
+        public Task<bool> LogOutAllAccounts()
         {
             try
             {
-                SettingsManager.SaveSetting(ACTIVE_USER_NAME_KEY, null);
+                SettingsManager.SaveSetting(ACTIVE_ACCOUNT_USERNAME_KEY, null);
 
                 SettingsManager.SaveSetting(ACTIVE_ACCESS_TOKEN_KEY, null);
 
                 SettingsManager.SaveSetting(ACTIVE_REFRESH_TOKEN_KEY, null);
 
-                _activeUser = null;
-
-                var savedUsers = GetSavedUsers().Result;
+                var savedUsers = GetSavedAccounts().Result;
 
                 foreach (var user in savedUsers)
                 {
@@ -98,6 +101,12 @@ namespace FakinReader.Services
                     user.RefreshToken = null;
                 }
 
+                var toSave = JsonConvert.SerializeObject(savedUsers);
+
+                SettingsManager.SaveSetting(SAVED_ACCOUNTS_KEY, toSave);
+
+                ActiveAccount = new Account("Logged out", null, null);
+
                 return Task.FromResult(true);
             }
             catch (Exception exception)
@@ -106,41 +115,44 @@ namespace FakinReader.Services
             }
         }
 
-        public void MakeUserActive(string username)
+        public void MakeAccountActive(string username)
         {
-            var existingUser = SavedUsers.Where(x => x.Username.ToUpper() == username.ToUpper()).Single();
+            var existingUser = SavedAccounts.Where(x => x.Username.ToUpper() == username.ToUpper()).Single();
 
-            if (existingUser.HasAuthorizedThisApp == false)
+            if (existingUser.HasAuthorizedThisApp == false || existingUser == null)
             {
                 SendToActivate();
             }
             else
             {
-
-                SettingsManager.SaveSetting(ACTIVE_USER_NAME_KEY, existingUser.Username);
+                SettingsManager.SaveSetting(ACTIVE_ACCOUNT_USERNAME_KEY, existingUser.Username);
 
                 SettingsManager.SaveSetting(ACTIVE_ACCESS_TOKEN_KEY, existingUser.AccessToken);
 
                 SettingsManager.SaveSetting(ACTIVE_REFRESH_TOKEN_KEY, existingUser.RefreshToken);
+
+                ActiveAccount = existingUser;
             }
         }
 
-        public async void SaveUser(User user)
+        public async void SaveAccount(Account account)
         {
-            var listOfSavedUsers = await GetSavedUsers();
+            var listOfSavedAccounts = await GetSavedAccounts();
 
-            var existingUser = listOfSavedUsers.Where(x => x.Username.ToUpper() == user.Username.ToUpper()).FirstOrDefault();
+            var existingAccount = listOfSavedAccounts.Where(x => x.Username.ToUpper() == account.Username.ToUpper()).FirstOrDefault();
 
-            if (existingUser != null)
+            if (existingAccount != null)
             {
-                listOfSavedUsers.Remove(existingUser);
+                listOfSavedAccounts.Remove(existingAccount);
             }
 
-            listOfSavedUsers.Add(user);
+            listOfSavedAccounts.Add(account);
 
-            var toSave = JsonConvert.SerializeObject(listOfSavedUsers);
+            var toSave = JsonConvert.SerializeObject(listOfSavedAccounts);
 
-            SettingsManager.SaveSetting(SAVED_USERS_KEY, toSave);
+            SettingsManager.SaveSetting(SAVED_ACCOUNTS_KEY, toSave);
+
+            SavedAccounts = listOfSavedAccounts;
         }
 
         public async Task<bool> SecureSave(string authorizationCode, string userName = null)
@@ -149,7 +161,7 @@ namespace FakinReader.Services
             {
                 SettingsManager.SaveSetting(AUTHORIZATION_CODE_KEY, authorizationCode);
 
-                SettingsManager.SaveSetting(ACTIVE_USER_NAME_KEY, userName);
+                SettingsManager.SaveSetting(ACTIVE_ACCOUNT_USERNAME_KEY, userName);
 
                 return true;
             }
@@ -169,21 +181,15 @@ namespace FakinReader.Services
             webView.IsVisible = true;
         }
 
-        private Task<List<User>> GetSavedUsers()
+        private Task<List<Account>> GetSavedAccounts()
         {
-            var savedUsers = new List<User>();
+            var savedUsers = new List<Account>();
 
-            var savedUsersSerialized = Preferences.Get(SAVED_USERS_KEY, null);
+            var savedUsersSerialized = Preferences.Get(SAVED_ACCOUNTS_KEY, null);
 
-            try
+            if (savedUsersSerialized != null)
             {
-                if (savedUsersSerialized != null)
-                {
-                    savedUsers = JsonConvert.DeserializeObject<List<User>>(savedUsersSerialized);
-                }
-            }
-            catch (Exception e)
-            {
+                savedUsers = JsonConvert.DeserializeObject<List<Account>>(savedUsersSerialized);
             }
 
             return Task.FromResult(savedUsers);

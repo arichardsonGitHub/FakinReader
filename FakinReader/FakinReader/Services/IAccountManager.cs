@@ -8,22 +8,21 @@ namespace FakinReader.Services
         #region Properties
         string ActiveAccessTokenKey { get; }
         string ActiveRefreshTokenKey { get; }
-        User ActiveUser { get; }
+        Account ActiveAccount { get; set; }
         string ActiveUserNameKey { get; }
         string AuthorizationCodeKey { get; }
-        List<User> SavedUsers { get; }
+        List<Account> SavedAccounts { get; }
         ISettingsManager SettingsManager { get; }
         #endregion Properties
 
         #region Methods
-
         string GetAuthorizationUrl();
 
-        Task<bool> LogOut();
+        Task<bool> LogOutAllAccounts();
 
-        void MakeUserActive(string username);
+        void MakeAccountActive(string username);
 
-        void SaveUser(User user);
+        void SaveAccount(Account account);
 
         Task<bool> SecureSave(string authorizationCode, string userName = null);
 

@@ -3,7 +3,6 @@ using Xamarin.Forms;
 
 namespace FakinReader.Models
 {
-
     public class HomeMenuItem
     {
         #region Properties
