@@ -9,7 +9,6 @@ namespace FakinReader.Views.User
     public partial class ProfileOverviewPage : ContentPage
     {
         #region Constructors
-
         public ProfileOverviewPage()
         {
             InitializeComponent();

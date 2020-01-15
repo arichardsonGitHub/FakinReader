@@ -9,7 +9,6 @@ namespace FakinReader.Views.User
     public partial class RedditProfilePage : TabbedPage
     {
         #region Constructors
-
         public RedditProfilePage()
         {
             InitializeComponent();

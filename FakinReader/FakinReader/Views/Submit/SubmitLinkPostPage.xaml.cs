@@ -10,7 +10,6 @@ namespace FakinReader.Views.Submit
     public partial class SubmitLinkPostPage : ContentPage
     {
         #region Constructors
-
         public SubmitLinkPostPage()
         {
             InitializeComponent();
@@ -23,7 +22,6 @@ namespace FakinReader.Views.Submit
         #endregion Constructors
 
         #region Methods
-
         private async void OnSelectSubredditButtonClickedAsync(object sender, EventArgs e)
         {
             var manageSubredditsPage = new ManageSubredditsPage();

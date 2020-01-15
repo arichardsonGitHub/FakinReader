@@ -11,7 +11,6 @@ namespace FakinReader.Views
     public partial class NewItemPage : ContentPage
     {
         #region Constructors
-
         public NewItemPage()
         {
             InitializeComponent();
@@ -31,7 +30,6 @@ namespace FakinReader.Views
         #endregion Properties
 
         #region Methods
-
         private async void Cancel_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopModalAsync();

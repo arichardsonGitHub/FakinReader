@@ -7,7 +7,6 @@ namespace FakinReader.Views.Submit
     public partial class SubmitImagePostPage : ContentPage
     {
         #region Constructors
-
         public SubmitImagePostPage()
         {
             InitializeComponent();

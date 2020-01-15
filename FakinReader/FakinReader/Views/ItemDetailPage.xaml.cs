@@ -9,7 +9,6 @@ namespace FakinReader.Views
     public partial class ItemDetailPage : ContentPage
     {
         #region Constructors
-
         public ItemDetailPage(ItemDetailViewModel viewModel)
         {
             InitializeComponent();

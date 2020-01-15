@@ -7,7 +7,6 @@ namespace FakinReader.Views
     public partial class NavigateToSubredditPage : ContentPage
     {
         #region Constructors
-
         public NavigateToSubredditPage()
         {
             InitializeComponent();

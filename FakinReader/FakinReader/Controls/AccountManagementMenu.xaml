@@ -46,10 +46,10 @@
             </ListView>
         </Frame>
         <Frame>
-            <ListView 
-                x:Name="AccountManagementSavedAccountsListView" 
-                ItemsSource="{Binding AccountManager.SavedAccounts}" 
-                ItemSelected="AccountManagementSavedAccountsListView_ItemSelected" 
+            <ListView
+                x:Name="AccountManagementSavedAccountsListView"
+                ItemsSource="{Binding AccountManager.SavedAccounts}"
+                ItemSelected="AccountManagementSavedAccountsListView_ItemSelected"
                 HasUnevenRows="True"
                 SeparatorVisibility="None">
                 <ListView.ItemTemplate>

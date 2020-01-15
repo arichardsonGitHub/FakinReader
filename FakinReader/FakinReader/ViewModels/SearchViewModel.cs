@@ -8,7 +8,6 @@ namespace FakinReader.ViewModels
     public class SearchViewModel : BaseViewModel
     {
         #region Constructors
-
         public SearchViewModel()
         {
             Title = "Search";

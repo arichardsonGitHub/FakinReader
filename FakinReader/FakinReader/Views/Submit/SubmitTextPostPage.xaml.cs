@@ -8,7 +8,6 @@ namespace FakinReader.Views.Submit
     public partial class SubmitTextPostPage : ContentPage
     {
         #region Constructors
-
         public SubmitTextPostPage()
         {
             InitializeComponent();
@@ -20,7 +19,6 @@ namespace FakinReader.Views.Submit
         #endregion Properties
 
         #region Methods
-
         private async void OnSubmitButtonClicked(object sender, System.EventArgs e)
         {
             var reddit = AuthenticationManager.Reddit;

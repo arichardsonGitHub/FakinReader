@@ -13,7 +13,3 @@ namespace FakinReader.Services
         #endregion Properties
     }
 }
-
-
-
-

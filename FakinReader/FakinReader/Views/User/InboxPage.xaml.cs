@@ -9,7 +9,6 @@ namespace FakinReader.Views.User
     public partial class InboxPage : ContentPage
     {
         #region Constructors
-
         public InboxPage()
         {
             InitializeComponent();

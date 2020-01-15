@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="FakinReader.Views.AccountManagementPage"
              Title="Authorization">
-    
+
     <StackLayout VerticalOptions="FillAndExpand">
 
         <Label Text="{Binding AccountManager.ApplicationUser.Username}" />

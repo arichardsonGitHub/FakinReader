@@ -7,7 +7,6 @@ namespace FakinReader.Views
     public partial class HelpAndSupportPage : ContentPage
     {
         #region Constructors
-
         public HelpAndSupportPage()
         {
             InitializeComponent();

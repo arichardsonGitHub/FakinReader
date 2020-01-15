@@ -9,7 +9,6 @@ namespace FakinReader.Views.User
     public partial class ManageSubredditsPage : TabbedPage
     {
         #region Constructors
-
         public ManageSubredditsPage()
         {
             InitializeComponent();

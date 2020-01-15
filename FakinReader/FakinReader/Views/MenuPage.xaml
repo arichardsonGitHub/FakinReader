@@ -13,6 +13,5 @@
         <controls:AccountManagementMenu />
 
         <controls:MainMenu />
-        
     </StackLayout>
 </ContentPage>

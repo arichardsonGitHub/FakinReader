@@ -1,5 +1,4 @@
-﻿using FakinReader.Models.Enums;
-using FakinReader.Services;
+﻿using FakinReader.Services;
 using FakinReader.ViewModels;
 using RedditSharp.Things;
 using System;
@@ -16,7 +15,6 @@ namespace FakinReader.Views
     public partial class TestingPage : ContentPage
     {
         #region Constructors
-
         public TestingPage()
         {
             InitializeComponent();
@@ -65,10 +63,10 @@ namespace FakinReader.Views
             }
         }
 
+        private MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         #endregion Properties
 
         #region Methods
-
         private void ListingListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (e.Item is Post post)
@@ -76,16 +74,12 @@ namespace FakinReader.Views
                 Launcher.OpenAsync(post.Url);
             }
         }
-            MainPage RootPage { get => Application.Current.MainPage as MainPage; }
-
         private void OnDoSomethingButtonClickedAsync(object sender, EventArgs e)
         {
-
             AccountManager.RemoveSavedAccount("i_win_because_i_quit");
             AccountManager.RemoveSavedAccount("i_cant_think_of_a_us");
 
             //Task.WaitAll(RootPage.NavigateFromMenu((int)MenuItemType.AddAccount));
-
         }
 
         private void SetLastActiveUser(string userName)

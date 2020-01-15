@@ -15,8 +15,6 @@ namespace FakinReader.Services
         #region Properties
         public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
         public AuthProvider AuthProvider => new AuthProvider(CLIENT_ID, null, REDIRECT_URL);
-        public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
-
         public Reddit Reddit
         {
             get
@@ -29,8 +27,8 @@ namespace FakinReader.Services
                 return _reddit;
             }
         }
-
         public string RedirectUrl => REDIRECT_URL;
+        public ISettingsManager SettingsManager => DependencyService.Get<ISettingsManager>();
         #endregion Properties
 
         #region Methods

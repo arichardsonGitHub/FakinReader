@@ -10,7 +10,6 @@ namespace FakinReader.Views
     public partial class MainHomePage : ContentPage
     {
         #region Constructors
-
         public MainHomePage()
         {
             InitializeComponent();
@@ -24,7 +23,6 @@ namespace FakinReader.Views
         #endregion Fields
 
         #region Methods
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -44,7 +42,7 @@ namespace FakinReader.Views
         {
             if (!(args.SelectedItem is Item item))
             {
-                return; 
+                return;
             }
 
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));

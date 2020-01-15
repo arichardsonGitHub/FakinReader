@@ -49,10 +49,10 @@ namespace FakinReader.Views
                     case (int)MenuItemType.Inbox:
                         MenuPages.Add(id, new NavigationPage(new InboxPage()));
                         break;
+
                     case (int)MenuItemType.LogAllAccountsOut:
                         MenuPages.Add(id, new NavigationPage(new TestingPage()));
                         break;
-
 
                     case (int)MenuItemType.ManageSubreddits:
                         MenuPages.Add(id, new NavigationPage(new ManageSubredditsPage()));

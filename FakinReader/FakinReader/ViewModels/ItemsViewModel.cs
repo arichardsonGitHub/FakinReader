@@ -11,13 +11,12 @@ namespace FakinReader.ViewModels
     public class ItemsViewModel : BaseViewModel
     {
         #region Constructors
-
         public ItemsViewModel()
         {
             Title = "Browse";
-            
+
             Items = new ObservableCollection<Item>();
-            
+
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
             MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
@@ -37,7 +36,6 @@ namespace FakinReader.ViewModels
         #endregion Properties
 
         #region Methods
-
         private async Task ExecuteLoadItemsCommand()
         {
             if (IsBusy)

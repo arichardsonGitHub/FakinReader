@@ -9,7 +9,6 @@ namespace FakinReader.Views
     public partial class SubredditsSelectPage : TabbedPage
     {
         #region Constructors
-
         public SubredditsSelectPage()
         {
             InitializeComponent();

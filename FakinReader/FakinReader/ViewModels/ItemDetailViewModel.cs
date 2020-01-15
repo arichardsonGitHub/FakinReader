@@ -5,7 +5,6 @@ namespace FakinReader.ViewModels
     public class ItemDetailViewModel : BaseViewModel
     {
         #region Constructors
-
         public ItemDetailViewModel(Item item = null)
         {
             Title = item?.Text;

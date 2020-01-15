@@ -1,22 +1,18 @@
-﻿using RedditSharp.Things;
-using FakinReader.Helpers;
+﻿using FakinReader.Services;
+using RedditSharp.Things;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using FakinReader.Services;
 
 namespace FakinReader.Views.User
 {
     [DesignTimeVisible(false)]
     public partial class MySubredditsPage : ContentPage
     {
-        public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
-
         #region Constructors
-
         public MySubredditsPage()
         {
             InitializeComponent();
@@ -25,12 +21,11 @@ namespace FakinReader.Views.User
 
         #region Fields
         private bool _isRefreshing;
-
         private ObservableCollection<Subreddit> _mySubreddits;
         #endregion Fields
 
         #region Properties
-
+        public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
         public bool IsRefreshing
         {
             get { return _isRefreshing; }
@@ -46,11 +41,9 @@ namespace FakinReader.Views.User
             get { return _mySubreddits; }
             set { _mySubreddits = value; OnPropertyChanged(nameof(ListOfMySubreddits)); }
         }
-
         #endregion Properties
 
         #region Methods
-
         protected override async void OnAppearing()
         {
             await RefreshList();

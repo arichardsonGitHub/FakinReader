@@ -8,7 +8,6 @@ namespace FakinReader.Views
     public partial class AccountManagementPage : ContentPage
     {
         #region Constructors
-
         public AccountManagementPage()
         {
             InitializeComponent();

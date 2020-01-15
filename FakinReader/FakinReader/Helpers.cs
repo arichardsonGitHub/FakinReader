@@ -7,7 +7,6 @@ namespace FakinReader.Helpers
     public class Helpers
     {
         #region Methods
-
         public Task<NameValueCollection> ParseQueryString(string s)
         {
             var nameValueCollection = new NameValueCollection();

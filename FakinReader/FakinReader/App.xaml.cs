@@ -7,7 +7,6 @@ namespace FakinReader
     public partial class App : Application
     {
         #region Constructors
-
         public App()
         {
             InitializeComponent();
@@ -25,7 +24,6 @@ namespace FakinReader
         #endregion Constructors
 
         #region Methods
-
         protected override void OnResume()
         {
             // Handle when your app resumes

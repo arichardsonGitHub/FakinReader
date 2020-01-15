@@ -6,10 +6,9 @@
              mc:Ignorable="d"
              x:Class="FakinReader.Views.AuthorizationPage"
              Title="Authorization">
-    
-    <StackLayout VerticalOptions="FillAndExpand">
-        
-        <WebView x:Name="webView" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
 
+    <StackLayout VerticalOptions="FillAndExpand">
+
+        <WebView x:Name="webView" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
     </StackLayout>
 </ContentPage>

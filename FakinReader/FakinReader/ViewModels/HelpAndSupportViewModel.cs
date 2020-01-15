@@ -5,7 +5,6 @@ namespace FakinReader.ViewModels
     public class HelpAndSupportViewModel : BaseViewModel
     {
         #region Constructors
-
         public HelpAndSupportViewModel()
         {
             Title = "Help and support";

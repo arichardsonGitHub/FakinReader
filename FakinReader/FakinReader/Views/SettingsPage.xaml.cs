@@ -9,7 +9,6 @@ namespace FakinReader.Views
     public partial class SettingsPage : ContentPage
     {
         #region Constructors
-
         public SettingsPage()
         {
             InitializeComponent();

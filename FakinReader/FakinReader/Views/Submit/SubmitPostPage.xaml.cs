@@ -7,7 +7,6 @@ namespace FakinReader.Views.Submit
     public partial class SubmitPostPage : TabbedPage
     {
         #region Constructors
-
         public SubmitPostPage()
         {
             InitializeComponent();

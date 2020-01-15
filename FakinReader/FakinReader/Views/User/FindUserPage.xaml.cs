@@ -9,7 +9,6 @@ namespace FakinReader.Views.User
     public partial class FindUserPage : ContentPage
     {
         #region Constructors
-
         public FindUserPage()
         {
             InitializeComponent();
@@ -17,7 +16,6 @@ namespace FakinReader.Views.User
         #endregion Constructors
 
         #region Methods
-
         private void CancelButton_Clicked(object sender, System.EventArgs e)
         {
         }

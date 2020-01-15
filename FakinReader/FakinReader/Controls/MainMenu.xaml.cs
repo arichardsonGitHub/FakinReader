@@ -1,5 +1,4 @@
 ﻿using FakinReader.Models;
-using FakinReader.Models.Enums;
 using FakinReader.Services;
 using FakinReader.ViewModels;
 using FakinReader.Views;
@@ -48,7 +47,6 @@ namespace FakinReader.Controls
 
             await RootPage.NavigateFromMenu(menuItemType);
         }
-
         #endregion Methods
     }
 }

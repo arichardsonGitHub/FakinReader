@@ -9,7 +9,6 @@ namespace FakinReader.Services
     public class MockDataStore1 : IDataStore<Item>
     {
         #region Constructors
-
         public MockDataStore1()
         {
             items = new List<Item>()
@@ -29,7 +28,6 @@ namespace FakinReader.Services
         #endregion Fields
 
         #region Methods
-
         public async Task<bool> AddItemAsync(Item item)
         {
             items.Add(item);

@@ -16,7 +16,9 @@ namespace FakinReader.ViewModels
         #endregion Fields
 
         #region Events
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         #endregion Events
 
         #region Properties
