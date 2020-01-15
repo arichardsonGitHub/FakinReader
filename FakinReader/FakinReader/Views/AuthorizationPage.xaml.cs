@@ -9,7 +9,6 @@ namespace FakinReader.Views
     public partial class AuthorizationPage : ContentPage
     {
         #region Constructors
-
         public AuthorizationPage()
         {
             InitializeComponent();
@@ -38,11 +37,11 @@ namespace FakinReader.Views
 
         private async Task Authenticate(string urlWithAuthenticationCode)
         {
-            var parsed = await Helpers.Helpers.ParseQueryString(urlWithAuthenticationCode);
+            var helper = new Helpers.Helpers();
+
+            var parsed = await helper.ParseQueryString(urlWithAuthenticationCode);
 
             var tokens = await AuthenticationManager.AuthProvider.GetOAuthRefreshTokenFromCodeAsync(parsed.Get("code"));
-
-            await AccountManager.SecureSave(parsed.Get("code"));
 
             SettingsManager.SaveSetting(AccountManager.AuthorizationCodeKey, parsed.Get("code"));
 
@@ -52,9 +51,9 @@ namespace FakinReader.Views
 
             var user = new Account(AuthenticationManager.Reddit.User.Name, tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
 
-            AccountManager.SaveAccount(user);
+            await AccountManager.SaveAccount(user, true);
 
-            SettingsManager.SaveSetting(AccountManager.ActiveUserNameKey, user.Username);
+            //SettingsManager.SaveSetting(AccountManager.ActiveUserNameKey, user.Username);
         }
 
         private void WebView_Navigated(object sender, WebNavigatedEventArgs e)
@@ -62,7 +61,7 @@ namespace FakinReader.Views
             if (e.Url.ToUpper().StartsWith(AuthenticationManager.RedirectUrl.ToUpper()))
             {
                 Navigation.PopAsync();
-                
+
                 Application.Current.MainPage = new MainPage();
             }
         }
@@ -74,7 +73,7 @@ namespace FakinReader.Views
                 await Authenticate(e.Url);
             }
 
-            if(e.Url.ToUpper() == "HTTPS://WWW.REDDIT.COM/")
+            if (e.Url.ToUpper() == "HTTPS://WWW.REDDIT.COM/")
             {
                 webView.Source = AccountManager.GetAuthorizationUrl().Result;
             }

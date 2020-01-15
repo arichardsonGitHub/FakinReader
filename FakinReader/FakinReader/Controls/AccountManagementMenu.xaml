@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<StackLayout
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Class="FakinReader.Controls.AccountManagementMenu">
+    <StackLayout Orientation="Horizontal" Padding="10,0,0,0">
+        <StackLayout.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding ExpandHideData}" />
+        </StackLayout.GestureRecognizers>
+        <Label
+            x:Name="ActiveUser"
+            Text="{Binding AccountManager.ActiveAccount.Username}"
+            FontSize="18"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            FontAttributes="Bold" />
+        <Label
+            HorizontalOptions="EndAndExpand"
+            Text="{Binding ExpanderButtonText}" />
+    </StackLayout>
+    <StackLayout Padding="10,0,0,0" HeightRequest="{Binding ExpandedHeight}">
+        <Frame>
+            <ListView
+                x:Name="AccountManagementMainListView"
+                ItemsSource="{Binding MenuItems}"
+                ItemSelected="AccountManagementListView_ItemSelected"
+                HasUnevenRows="True"
+                SeparatorVisibility="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Source="{Binding IconSource}" />
+                                <Label Grid.Column="1" Text="{Binding Title}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Frame>
+        <Frame>
+            <ListView 
+                x:Name="AccountManagementSavedAccountsListView" 
+                ItemsSource="{Binding AccountManager.SavedAccounts}" 
+                ItemSelected="AccountManagementSavedAccountsListView_ItemSelected" 
+                HasUnevenRows="True"
+                SeparatorVisibility="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="5,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="1" Text="{Binding Username}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Frame>
+    </StackLayout>
+</StackLayout>

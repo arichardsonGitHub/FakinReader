@@ -11,9 +11,9 @@ namespace FakinReader.Services
         string ActiveRefreshTokenKey { get; }
         string ActiveUserNameKey { get; }
         string AuthorizationCodeKey { get; }
+        Account LoggedOutAccount { get; set; }
         List<Account> SavedAccounts { get; }
         ISettingsManager SettingsManager { get; }
-        Account LoggedOutAccount { get; set; }
         #endregion Properties
 
         #region Methods
@@ -22,7 +22,6 @@ namespace FakinReader.Services
         Task<bool> MakeAccountActive(string username);
         Task<bool> RemoveSavedAccount(string accountUserName);
         Task<bool> SaveAccount(Account account, bool setAsActive = true);
-        Task<bool> SecureSave(string authorizationCode, string userName = null);
         #endregion Methods
     }
 }

@@ -1,27 +1,26 @@
 ﻿using FakinReader.Models;
+using FakinReader.Models.Enums;
 using FakinReader.Services;
 using FakinReader.ViewModels;
-using System.ComponentModel;
+using FakinReader.Views;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
-namespace FakinReader.Views
+namespace FakinReader.Controls
 {
-    [DesignTimeVisible(false)]
-    public partial class MenuPage : ContentPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class MainMenu : StackLayout
     {
         #region Constructors
-        public MenuPage()
+        public MainMenu()
         {
             InitializeComponent();
 
             BindingContext = _mainMenuViewModel = new MainMenuViewModel();
         }
-
-        public MenuPage(MainMenuViewModel menuViewModel)
+        public MainMenu(MainMenuViewModel mainMenuViewModel)
         {
-            InitializeComponent();
-
-            _mainMenuViewModel = menuViewModel;
+            _mainMenuViewModel = mainMenuViewModel;
 
             BindingContext = _mainMenuViewModel = new MainMenuViewModel();
         }
@@ -33,23 +32,23 @@ namespace FakinReader.Views
 
         #region Properties
         public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
+
         private MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         #endregion Properties
 
         #region Methods
-        private async void MainListViewMenu_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void MainMenuListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (e.SelectedItem == null)
             {
                 return;
             }
 
-            var id = (int)((HomeMenuItem)e.SelectedItem).MenuItemType;
+            var menuItemType = (int)((HomeMenuItem)e.SelectedItem).MenuItemType;
 
-            await RootPage.NavigateFromMenu(id);
-
-            _mainMenuViewModel.ResetMenuItems();
+            await RootPage.NavigateFromMenu(menuItemType);
         }
+
         #endregion Methods
     }
 }

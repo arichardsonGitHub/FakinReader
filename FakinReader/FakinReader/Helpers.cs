@@ -8,11 +8,10 @@ namespace FakinReader.Helpers
     {
         #region Methods
 
-        public static async Task<NameValueCollection> ParseQueryString(string s)
+        public Task<NameValueCollection> ParseQueryString(string s)
         {
             var nameValueCollection = new NameValueCollection();
 
-            // remove anything other than query string from url
             if (s.Contains("?"))
             {
                 s = s.Substring(s.IndexOf('?') + 1);
@@ -28,12 +27,11 @@ namespace FakinReader.Helpers
                 }
                 else
                 {
-                    // only one key with no value specified in query string
                     nameValueCollection.Add(singlePair[0], string.Empty);
                 }
             }
 
-            return nameValueCollection;
+            return Task.FromResult(nameValueCollection);
         }
         #endregion Methods
     }

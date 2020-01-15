@@ -13,7 +13,6 @@ namespace FakinReader.Services
     public class AccountManager : BaseViewModel, IAccountManager
     {
         #region Constructors
-
         public AccountManager()
         {
             LoggedOutAccount = new Account("Logged out", null, null);
@@ -57,9 +56,13 @@ namespace FakinReader.Services
         }
 
         public string ActiveRefreshTokenKey => ACTIVE_REFRESH_TOKEN_KEY;
+
         public string ActiveUserNameKey => ACTIVE_ACCOUNT_USERNAME_KEY;
+
         public IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
+
         public string AuthorizationCodeKey => AUTHORIZATION_CODE_KEY;
+
         public Account LoggedOutAccount { get; set; }
 
         public List<Account> SavedAccounts
@@ -78,7 +81,6 @@ namespace FakinReader.Services
         #endregion Properties
 
         #region Methods
-
         public Task<string> GetAuthorizationUrl()
         {
             var scopes = AuthProvider.Scope.edit | AuthProvider.Scope.flair | AuthProvider.Scope.history | AuthProvider.Scope.identity | AuthProvider.Scope.modconfig | AuthProvider.Scope.modflair | AuthProvider.Scope.modlog | AuthProvider.Scope.modposts | AuthProvider.Scope.modwiki | AuthProvider.Scope.mysubreddits | AuthProvider.Scope.privatemessages | AuthProvider.Scope.read | AuthProvider.Scope.report | AuthProvider.Scope.save | AuthProvider.Scope.submit | AuthProvider.Scope.subscribe | AuthProvider.Scope.vote | AuthProvider.Scope.wikiedit | AuthProvider.Scope.wikiread;
@@ -123,10 +125,12 @@ namespace FakinReader.Services
 
         public async Task<bool> MakeAccountActive(string username)
         {
-            var existingUser = SavedAccounts.Where(account => account.Username.ToUpper() == username.ToUpper()).Single();
+            Account existingUser;
 
             await Task.Run(() =>
             {
+                existingUser = SavedAccounts.Where(account => account.Username.ToUpper() == username.ToUpper()).Single();
+
                 if (existingUser.HasAuthorizedThisApp == false || existingUser == null)
                 {
                     SendToActivate();
@@ -200,25 +204,6 @@ namespace FakinReader.Services
             }
 
             return true;
-        }
-
-        public async Task<bool> SecureSave(string authorizationCode, string userName = null)
-        {
-            try
-            {
-                await Task.Run(() =>
-                {
-                    SettingsManager.SaveSetting(AUTHORIZATION_CODE_KEY, authorizationCode);
-
-                    SettingsManager.SaveSetting(ACTIVE_ACCOUNT_USERNAME_KEY, userName);
-                });
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         public async void SendToActivate()

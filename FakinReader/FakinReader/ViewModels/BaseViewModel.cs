@@ -11,14 +11,12 @@ namespace FakinReader.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
         #region Fields
-        private bool isBusy = false;
-        private string title = string.Empty;
+        private bool _isBusy = false;
+        private string _title = string.Empty;
         #endregion Fields
 
         #region Events
-
         public event PropertyChangedEventHandler PropertyChanged;
-
         #endregion Events
 
         #region Properties
@@ -26,26 +24,24 @@ namespace FakinReader.ViewModels
 
         public bool IsBusy
         {
-            get { return isBusy; }
-           
-            set { SetProperty(ref isBusy, value); }
+            get { return _isBusy; }
+
+            set { SetProperty(ref _isBusy, value); }
         }
 
         public string Title
         {
-            get { return title; }
-           
-            set { SetProperty(ref title, value); }
-        }
+            get { return _title; }
 
+            set { SetProperty(ref _title, value); }
+        }
         #endregion Properties
 
         #region Methods
-
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             var changed = PropertyChanged;
-            
+
             if (changed == null)
             {
                 return;
@@ -62,11 +58,11 @@ namespace FakinReader.ViewModels
             }
 
             backingStore = value;
-           
+
             onChanged?.Invoke();
-            
+
             OnPropertyChanged(propertyName);
-            
+
             return true;
         }
         #endregion Methods

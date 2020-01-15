@@ -3,88 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:FakinReader.Controls"
              mc:Ignorable="d"
              x:Class="FakinReader.Views.MenuPage"
              Title="Menu">
 
     <StackLayout VerticalOptions="FillAndExpand">
-        <StackLayout>
-            <StackLayout>
-                <StackLayout Orientation="Horizontal" Padding="0,10,10,0">
-                    <StackLayout.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ExpandHideData}" />
-                    </StackLayout.GestureRecognizers>
-                    <Label 
-                        x:Name="ActiveUser" 
-                        Text="{Binding AccountManager.ActiveAccount.Username}" 
-                        FontSize="18" 
-                        HorizontalOptions="Center" 
-                        VerticalOptions="Center" 
-                        FontAttributes="Bold" />
-                    <Label 
-                        HorizontalOptions="EndAndExpand" 
-                        Text="{Binding ExpanderButtonText}" />
-                </StackLayout>
-                <BoxView HeightRequest="1" Color="Gray" HorizontalOptions="FillAndExpand" />
-            </StackLayout>
-            <StackLayout Padding="10,0,0,0" HeightRequest="{Binding ExpandedHeight}">
-                <ListView 
-                    x:Name="AccountManagementListView"                    
-                    ItemsSource="{Binding AccountManagementMenuItems}" 
-                    ItemSelected="AccountManagementListView_ItemSelected"
-                    HasUnevenRows="True">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid Padding="5,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="{Binding IconSource}" />
-                                    <Label Grid.Column="1" Text="{Binding Title}" />
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <ListView 
-                    x:Name="AccountManagementListViewSavedAccounts" 
-                    ItemsSource="{Binding AccountManager.SavedAccounts}" 
-                    ItemSelected="AccountManagementListView_ItemSelected" 
-                    HasUnevenRows="True">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid Padding="5,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="30" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="1" Text="{Binding Username}" />
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-        </StackLayout>
-        <BoxView HeightRequest="1" Color="Gray" HorizontalOptions="FillAndExpand" />
-        <ListView x:Name="MainListViewMenu" HasUnevenRows="True" ItemsSource="{Binding MainMenuItems}" ItemSelected="MainListViewMenu_ItemSelected">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid Padding="5,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Image Source="{Binding IconSource}" />
-                            <Label Grid.Column="1" Text="{Binding Title}" />
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+
+        <controls:AccountManagementMenu />
+
+        <controls:MainMenu />
+        
     </StackLayout>
 </ContentPage>

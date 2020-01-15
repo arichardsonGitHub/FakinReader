@@ -34,11 +34,8 @@ namespace FakinReader.Views
                 switch (id)
                 {
                     case (int)MenuItemType.AddAccount:
+                    case (int)MenuItemType.MakeAccountActive:
                         MenuPages.Add(id, new NavigationPage(new AuthorizationPage()));
-                        break;
-
-                    case (int)MenuItemType.LogAllAccountsOut:
-                        MenuPages.Add(id, new NavigationPage(new TestingPage()));
                         break;
 
                     case (int)MenuItemType.FindUser:
@@ -52,13 +49,13 @@ namespace FakinReader.Views
                     case (int)MenuItemType.Inbox:
                         MenuPages.Add(id, new NavigationPage(new InboxPage()));
                         break;
+                    case (int)MenuItemType.LogAllAccountsOut:
+                        MenuPages.Add(id, new NavigationPage(new TestingPage()));
+                        break;
+
 
                     case (int)MenuItemType.ManageSubreddits:
                         MenuPages.Add(id, new NavigationPage(new ManageSubredditsPage()));
-                        break;
-
-                    case (int)MenuItemType.Subreddit:
-                        MenuPages.Add(id, new NavigationPage(new NavigateToSubredditPage()));
                         break;
 
                     case (int)MenuItemType.Profile:
@@ -71,6 +68,10 @@ namespace FakinReader.Views
 
                     case (int)MenuItemType.SubmitPost:
                         MenuPages.Add(id, new NavigationPage(new SubmitPostPage()));
+                        break;
+
+                    case (int)MenuItemType.Subreddit:
+                        MenuPages.Add(id, new NavigationPage(new NavigateToSubredditPage()));
                         break;
 
                     case (int)MenuItemType.Testing:
