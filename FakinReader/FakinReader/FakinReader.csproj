@@ -6,7 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Item.cs" />
+    <Compile Remove="Services\IDataStore.cs" />
+    <Compile Remove="Services\MockDataStore1.cs" />
     <Compile Remove="ViewModels\AccountManagementViewModel.cs" />
+    <Compile Remove="ViewModels\ItemDetailViewModel.cs" />
+    <Compile Remove="ViewModels\ItemsViewModel.cs" />
+    <Compile Remove="Views\ItemDetailPage.xaml.cs" />
+    <Compile Remove="Views\NewItemPage.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Views\ItemDetailPage.xaml" />
+    <EmbeddedResource Remove="Views\NewItemPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,9 +45,6 @@
     </Compile>
     <Compile Update="Controls\AccountManagementMenu.xaml.cs">
       <DependentUpon>AccountManagementMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Views\AccountManagementPage.xaml.cs">
-      <DependentUpon>AccountManagementPage.xaml</DependentUpon>
     </Compile>
     <Compile Update="Views\AuthorizationPage.xaml.cs">
       <DependentUpon>AuthorizationPage.xaml</DependentUpon>

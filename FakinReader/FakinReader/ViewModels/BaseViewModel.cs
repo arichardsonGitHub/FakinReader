@@ -22,8 +22,6 @@ namespace FakinReader.ViewModels
         #endregion Events
 
         #region Properties
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
-
         public bool IsBusy
         {
             get { return _isBusy; }

@@ -26,7 +26,7 @@
             <ListView
                 x:Name="AccountManagementMainListView"
                 ItemsSource="{Binding MenuItems}"
-                ItemSelected="AccountManagementListView_ItemSelected"
+                ItemSelected="AccountManagementMainListView_ItemSelected"
                 HasUnevenRows="True"
                 SeparatorVisibility="None">
                 <ListView.ItemTemplate>

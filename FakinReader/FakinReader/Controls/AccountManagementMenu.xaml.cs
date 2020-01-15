@@ -37,7 +37,7 @@ namespace FakinReader.Controls
         #endregion Properties
 
         #region Methods
-        private async void AccountManagementListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private async void AccountManagementMainListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             if (e.SelectedItem == null)
             {
@@ -60,6 +60,8 @@ namespace FakinReader.Controls
                     await _accountManagementMenuViewModel.MakeAccountActive(((Account)e.SelectedItem).Username);
                     break;
             }
+
+            AccountManagementMainListView.SelectedItem = null;
         }
 
         private async void AccountManagementSavedAccountsListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -77,6 +79,8 @@ namespace FakinReader.Controls
                     await RootPage.NavigateFromMenu(menuItemType);
                     break;
             }
+
+            AccountManagementSavedAccountsListView.SelectedItem = null;
         }
         #endregion Methods
     }
