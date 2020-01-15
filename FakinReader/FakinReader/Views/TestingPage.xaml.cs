@@ -1,4 +1,6 @@
-﻿using FakinReader.ViewModels;
+﻿using FakinReader.Models.Enums;
+using FakinReader.Services;
+using FakinReader.ViewModels;
 using RedditSharp.Things;
 using System;
 using System.Collections.ObjectModel;
@@ -30,6 +32,7 @@ namespace FakinReader.Views
         #endregion Fields
 
         #region Properties
+        public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
 
         public bool IsRefreshing
         {
@@ -64,28 +67,6 @@ namespace FakinReader.Views
 
         #endregion Properties
 
-        //private async Task<Post> AddAPost()
-        //{
-        //    var reddit = AuthenticationManager.GetRedditObject();
-
-        //    var drumsSubredditTask = reddit.GetSubredditAsync("drums");
-
-        //    var drumsSubreddit = drumsSubredditTask.Result;
-
-        //    var newPost = await drumsSubreddit.SubmitPostAsync("Just testing", "https://forums.xamarin.com/discussion/169887/how-to-fix-xamarin-forms-build-error-failed-to-create-javatypeinfo-for-class");
-
-        //    ListOfSomething = new ObservableCollection<Post>
-        //    {
-        //        newPost
-        //    };
-
-        //    ItemsListView.ItemsSource = ListOfSomething;
-
-        //    ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
-
-        //    return newPost;
-        //}
-
         #region Methods
 
         private void ListingListView_ItemTapped(object sender, ItemTappedEventArgs e)
@@ -95,16 +76,16 @@ namespace FakinReader.Views
                 Launcher.OpenAsync(post.Url);
             }
         }
+            MainPage RootPage { get => Application.Current.MainPage as MainPage; }
 
         private void OnDoSomethingButtonClickedAsync(object sender, EventArgs e)
         {
-            //SetLastActiveUser();
 
-            //SimulateCheckingForAuthenticationAsync();
+            AccountManager.RemoveSavedAccount("i_win_because_i_quit");
+            AccountManager.RemoveSavedAccount("i_cant_think_of_a_us");
 
-            //AuthenticationHelper.SendToActivate();
+            //Task.WaitAll(RootPage.NavigateFromMenu((int)MenuItemType.AddAccount));
 
-            Navigation.PushAsync(new AuthorizationPage());
         }
 
         private void SetLastActiveUser(string userName)
@@ -253,3 +234,24 @@ namespace FakinReader.Views
             }
         }
         */
+//private async Task<Post> AddAPost()
+//{
+//    var reddit = AuthenticationManager.GetRedditObject();
+
+//    var drumsSubredditTask = reddit.GetSubredditAsync("drums");
+
+//    var drumsSubreddit = drumsSubredditTask.Result;
+
+//    var newPost = await drumsSubreddit.SubmitPostAsync("Just testing", "https://forums.xamarin.com/discussion/169887/how-to-fix-xamarin-forms-build-error-failed-to-create-javatypeinfo-for-class");
+
+//    ListOfSomething = new ObservableCollection<Post>
+//    {
+//        newPost
+//    };
+
+//    ItemsListView.ItemsSource = ListOfSomething;
+
+//    ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
+
+//    return newPost;
+//}

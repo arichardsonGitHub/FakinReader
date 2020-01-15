@@ -29,7 +29,7 @@ namespace FakinReader.Views
         {
             base.OnAppearing();
 
-            webView.Source = AccountManager.GetAuthorizationUrl();
+            webView.Source = AccountManager.GetAuthorizationUrl().Result;
 
             webView.Navigated += WebView_Navigated;
 
@@ -38,8 +38,6 @@ namespace FakinReader.Views
 
         private async Task Authenticate(string urlWithAuthenticationCode)
         {
-            await AccountManager.LogOutAllAccounts();
-
             var parsed = await Helpers.Helpers.ParseQueryString(urlWithAuthenticationCode);
 
             var tokens = await AuthenticationManager.AuthProvider.GetOAuthRefreshTokenFromCodeAsync(parsed.Get("code"));
@@ -78,7 +76,7 @@ namespace FakinReader.Views
 
             if(e.Url.ToUpper() == "HTTPS://WWW.REDDIT.COM/")
             {
-                webView.Source = AccountManager.GetAuthorizationUrl();
+                webView.Source = AccountManager.GetAuthorizationUrl().Result;
             }
         }
         #endregion Methods

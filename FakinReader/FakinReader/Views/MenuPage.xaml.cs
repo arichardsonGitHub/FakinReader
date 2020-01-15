@@ -3,7 +3,6 @@ using FakinReader.Models.Enums;
 using FakinReader.Services;
 using FakinReader.ViewModels;
 using System.ComponentModel;
-using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace FakinReader.Views
@@ -35,11 +34,11 @@ namespace FakinReader.Views
         #endregion Fields
 
         #region Properties
+        public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
         private MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         #endregion Properties
 
         #region Methods
-        public IAccountManager AccountManager => DependencyService.Get<IAccountManager>();
 
         private async void AccountManagementListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
@@ -48,22 +47,34 @@ namespace FakinReader.Views
                 return;
             }
 
-            var id = (int)((HomeMenuItem)e.SelectedItem).Id;
-
-            switch (id)
+            if (e.SelectedItem is Account)
             {
-                case (int)MenuItemType.LogAllAccountsOut:
-                    await _menuViewModel.LogOutAllAccounts();
-                    break;
+                var menuItemType = (int)((Account)e.SelectedItem).MenuItemType;
 
-                case (int)MenuItemType.MakeAccountActive:
-                    _menuViewModel.MakeAccountActive(((HomeMenuItem)e.SelectedItem).Title);
-                    break;
-
-                case (int)MenuItemType.AddAccount:
-                    await RootPage.NavigateFromMenu(id);
-                    break;
+                switch (menuItemType)
+                {
+                    case (int)MenuItemType.MakeAccountActive:
+                        _menuViewModel.MakeAccountActive(((Account)e.SelectedItem).Username);
+                        break;
+                }
             }
+            else if (e.SelectedItem is HomeMenuItem)
+            {
+                var id = (int)((HomeMenuItem)e.SelectedItem).Id;
+
+                switch (id)
+                {
+                    case (int)MenuItemType.LogAllAccountsOut:
+                        await _menuViewModel.LogOutAllAccounts();
+                        break;
+
+                    case (int)MenuItemType.AddAccount:
+                        await RootPage.NavigateFromMenu(id);
+                        break;
+                }
+            }
+
+            _menuViewModel.ResetAllMenuItems();
         }
 
         private async void MainListViewMenu_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -76,6 +87,9 @@ namespace FakinReader.Views
             var id = (int)((HomeMenuItem)e.SelectedItem).Id;
 
             await RootPage.NavigateFromMenu(id);
+
+            _menuViewModel.ResetAllMenuItems();
+
         }
         #endregion Methods
     }
