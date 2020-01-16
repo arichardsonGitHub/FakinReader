@@ -29,7 +29,15 @@ namespace FakinReader.Droid
 
             Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
-            Xamarin.Auth.Presenters.XamarinAndroid.AuthenticationConfiguration.Init(this, savedInstanceState);
+            //Xamarin.Auth.Presenters.XamarinAndroid.AuthenticationConfiguration.Init(this, savedInstanceState);
+
+
+
+
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            global::Xamarin.Forms.FormsMaterial.Init(this, savedInstanceState);
+
+
 
             LoadApplication(new App());
         }
