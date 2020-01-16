@@ -28,7 +28,7 @@ namespace FakinReader
         public string AccessToken { get; set; }
         public string AuthorizationCodeForSession { get; set; }
         public bool HasAuthorizedThisApp => string.IsNullOrEmpty(RefreshToken) == false;
-        public MenuItemType MenuItemType { get; set; }
+        public MenuItemType MenuItemType { get; set; } = MenuItemType.ActivateAccount;
         public string RefreshToken { get; set; }
         public string Username { get; set; }
         #endregion Properties

@@ -19,7 +19,7 @@ namespace FakinReader.Services
         #region Methods
         Task<string> GetAuthorizationUrl();
         Task<bool> LogOutAllAccounts();
-        Task<bool> MakeAccountActive(string username);
+        Task<bool> ActivateAccount(string username);
         Task<bool> RemoveSavedAccount(string accountUserName);
         Task<bool> SaveAccount(Account account, bool setAsActive = true);
         #endregion Methods

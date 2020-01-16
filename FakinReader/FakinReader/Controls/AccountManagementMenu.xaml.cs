@@ -56,8 +56,8 @@ namespace FakinReader.Controls
                     await _accountManagementMenuViewModel.LogOutAllAccounts();
                     break;
 
-                case (int)MenuItemType.MakeAccountActive:
-                    await _accountManagementMenuViewModel.MakeAccountActive(((Account)e.SelectedItem).Username);
+                case (int)MenuItemType.ActivateAccount:
+                    await _accountManagementMenuViewModel.ActivateAccount(((Account)e.SelectedItem).Username);
                     break;
             }
 
@@ -71,13 +71,13 @@ namespace FakinReader.Controls
                 return;
             }
 
-            var menuItemType = (int)((Account)e.SelectedItem).MenuItemType;
-
-            switch (menuItemType)
+            if (e.SelectedItem is Account account && account.HasAuthorizedThisApp == false && (int)MenuItemType.ActivateAccount == (int)((Account)e.SelectedItem).MenuItemType)
             {
-                case (int)MenuItemType.MakeAccountActive:
-                    await RootPage.NavigateFromMenu(menuItemType);
-                    break;
+                await RootPage.NavigateFromMenu((int)MenuItemType.ActivateAccount);
+            }
+            else
+            {
+               await _accountManagementMenuViewModel.ActivateAccount(((Account)e.SelectedItem).Username);
             }
 
             AccountManagementSavedAccountsListView.SelectedItem = null;

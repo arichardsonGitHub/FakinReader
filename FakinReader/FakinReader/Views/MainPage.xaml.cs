@@ -34,7 +34,7 @@ namespace FakinReader.Views
                 switch (id)
                 {
                     case (int)MenuItemType.AddAccount:
-                    case (int)MenuItemType.MakeAccountActive:
+                    case (int)MenuItemType.ActivateAccount:
                         MenuPages.Add(id, new NavigationPage(new AuthorizationPage()));
                         break;
 

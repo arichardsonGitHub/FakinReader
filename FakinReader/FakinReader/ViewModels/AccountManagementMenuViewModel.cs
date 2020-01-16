@@ -86,9 +86,11 @@ namespace FakinReader.ViewModels
         {
             return await AccountManager.LogOutAllAccounts();
         }
-        public async Task<bool> MakeAccountActive(string userName)
+        public async Task<bool> ActivateAccount(string userName)
         {
-            await AccountManager.MakeAccountActive(userName);
+            await AccountManager.ActivateAccount(userName);
+
+            ResetMenuItems();
 
             return true;
         }

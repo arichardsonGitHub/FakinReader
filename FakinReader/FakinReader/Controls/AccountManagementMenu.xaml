@@ -22,13 +22,14 @@
             Text="{Binding ExpanderButtonText}" />
     </StackLayout>
     <StackLayout Padding="10,0,0,0" HeightRequest="{Binding ExpandedHeight}">
-        <Frame>
+        <Frame VerticalOptions="StartAndExpand">
             <ListView
                 x:Name="AccountManagementMainListView"
                 ItemsSource="{Binding MenuItems}"
                 ItemSelected="AccountManagementMainListView_ItemSelected"
                 HasUnevenRows="True"
-                SeparatorVisibility="None">
+                SeparatorVisibility="None"
+                VerticalOptions="StartAndExpand">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -45,13 +46,14 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Frame>
-        <Frame>
+        <Frame VerticalOptions="StartAndExpand">
             <ListView
                 x:Name="AccountManagementSavedAccountsListView"
                 ItemsSource="{Binding AccountManager.SavedAccounts}"
                 ItemSelected="AccountManagementSavedAccountsListView_ItemSelected"
                 HasUnevenRows="True"
-                SeparatorVisibility="None">
+                SeparatorVisibility="None"
+                VerticalOptions="StartAndExpand">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

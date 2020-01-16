@@ -115,6 +115,8 @@ namespace FakinReader.Services
 
                 ActiveAccount = new Account("Logged out", null, null);
 
+                SavedAccounts = savedUsers;
+
                 return Task.FromResult(true);
             }
             catch (Exception exception)
@@ -123,7 +125,7 @@ namespace FakinReader.Services
             }
         }
 
-        public async Task<bool> MakeAccountActive(string username)
+        public async Task<bool> ActivateAccount(string username)
         {
             Account existingUser;
 
@@ -200,7 +202,7 @@ namespace FakinReader.Services
 
             if (setAsActive)
             {
-                await MakeAccountActive(accountToSave.Username);
+                await ActivateAccount(accountToSave.Username);
             }
 
             return true;
@@ -231,7 +233,7 @@ namespace FakinReader.Services
 
             savedAccounts.ForEach(x =>
             {
-                x.MenuItemType = Models.Enums.MenuItemType.MakeAccountActive;
+                x.MenuItemType = Models.Enums.MenuItemType.ActivateAccount;
             });
 
             return Task.FromResult(savedAccounts);

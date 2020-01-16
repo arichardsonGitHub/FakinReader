@@ -52,8 +52,6 @@ namespace FakinReader.Views
             var user = new Account(AuthenticationManager.Reddit.User.Name, tokens.AccessToken, tokens.RefreshToken, parsed.Get("code"));
 
             await AccountManager.SaveAccount(user, true);
-
-            //SettingsManager.SaveSetting(AccountManager.ActiveUserNameKey, user.Username);
         }
 
         private void WebView_Navigated(object sender, WebNavigatedEventArgs e)

@@ -7,7 +7,7 @@
         FindUser,
         HelpAndSupport,
         Inbox,
-        MakeAccountActive,
+        ActivateAccount,
         LogAllAccountsOut,
         ManageSubreddits,
         Profile,
