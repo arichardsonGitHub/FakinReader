@@ -14,7 +14,8 @@
                   IsPullToRefreshEnabled="True"
                   ItemsSource="{Binding ListOfMySubreddits}"
                   IsRefreshing="{Binding IsRefreshing}"
-                  ItemTapped= "ListingListView_ItemTapped">
+                  ItemTapped= "ListingListView_ItemTapped"
+                  SeparatorVisibility="None">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

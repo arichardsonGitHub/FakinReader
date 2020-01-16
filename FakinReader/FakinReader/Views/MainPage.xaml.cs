@@ -18,7 +18,7 @@ namespace FakinReader.Views
 
             MasterBehavior = MasterBehavior.Popover;
 
-            MenuPages.Add((int)MenuItemType.Home, (NavigationPage)Detail);
+            MenuPages.Add((int)MenuItemType.FrontPage, (NavigationPage)Detail);
         }
         #endregion Constructors
 
@@ -46,6 +46,9 @@ namespace FakinReader.Views
                         MenuPages.Add(id, new NavigationPage(new HelpAndSupportPage()));
                         break;
 
+                    case (int)MenuItemType.FrontPage:
+                        MenuPages.Add(id, new NavigationPage(new FrontPage()));
+                        break;
                     case (int)MenuItemType.Inbox:
                         MenuPages.Add(id, new NavigationPage(new InboxPage()));
                         break;

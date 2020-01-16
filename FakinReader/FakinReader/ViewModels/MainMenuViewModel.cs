@@ -91,7 +91,7 @@ namespace FakinReader.ViewModels
                 {
                     menuItems = new List<HomeMenuItem>
                     {
-                        new HomeMenuItem {MenuItemType = MenuItemType.Home, Title="Home" },
+                        new HomeMenuItem {MenuItemType = MenuItemType.FrontPage, Title="Front Page" },
                         new HomeMenuItem {MenuItemType = MenuItemType.Profile, Title="Profile", IconSource = "img_87237.png"},
                         new HomeMenuItem {MenuItemType = MenuItemType.Inbox, Title="Inbox", IconSource="img_452847"},
                         new HomeMenuItem {MenuItemType = MenuItemType.ManageSubreddits, Title="Manage Subreddits", IconSource="img_51.png"},

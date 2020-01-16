@@ -9,7 +9,7 @@
     <StackLayout Padding="10,0,0,0">
         <Frame>
             <ListView
-                x:Name="AccountManagementMainListView"
+                x:Name="MainMenuListView"
                 ItemsSource="{Binding MenuItems}"
                 ItemSelected="MainMenuListView_ItemSelected"
                 HasUnevenRows="True"

@@ -43,6 +43,8 @@ namespace FakinReader.Controls
                 return;
             }
 
+            MainMenuListView.SelectedItem = null;
+
             var menuItemType = (int)((HomeMenuItem)e.SelectedItem).MenuItemType;
 
             await RootPage.NavigateFromMenu(menuItemType);

@@ -3,7 +3,7 @@
     public enum MenuItemType
     {
         AddAccount,
-        Home,
+        FrontPage,
         FindUser,
         HelpAndSupport,
         Inbox,

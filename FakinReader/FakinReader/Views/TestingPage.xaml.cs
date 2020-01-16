@@ -76,8 +76,6 @@ namespace FakinReader.Views
         }
         private void OnDoSomethingButtonClickedAsync(object sender, EventArgs e)
         {
-            AccountManager.RemoveSavedAccount("i_win_because_i_quit");
-            AccountManager.RemoveSavedAccount("i_cant_think_of_a_us");
 
             //Task.WaitAll(RootPage.NavigateFromMenu((int)MenuItemType.AddAccount));
         }
@@ -227,25 +225,24 @@ namespace FakinReader.Views
             {
             }
         }
-        */
-//private async Task<Post> AddAPost()
-//{
-//    var reddit = AuthenticationManager.GetRedditObject();
-
-//    var drumsSubredditTask = reddit.GetSubredditAsync("drums");
-
-//    var drumsSubreddit = drumsSubredditTask.Result;
-
-//    var newPost = await drumsSubreddit.SubmitPostAsync("Just testing", "https://forums.xamarin.com/discussion/169887/how-to-fix-xamarin-forms-build-error-failed-to-create-javatypeinfo-for-class");
-
-//    ListOfSomething = new ObservableCollection<Post>
-//    {
-//        newPost
-//    };
-
-//    ItemsListView.ItemsSource = ListOfSomething;
-
-//    ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
-
-//    return newPost;
-//}
+ private async Task<Post> AddAPost()
+ {
+     var reddit = AuthenticationManager.GetRedditObject();
+ 
+     var drumsSubredditTask = reddit.GetSubredditAsync("drums");
+ 
+     var drumsSubreddit = drumsSubredditTask.Result;
+ 
+     var newPost = await drumsSubreddit.SubmitPostAsync("Just testing", "https://forums.xamarin.com/discussion/169887/how-to-fix-xamarin-forms-build-error-failed-to-create-javatypeinfo-for-class");
+ 
+     ListOfSomething = new ObservableCollection<Post>
+     {
+         newPost
+     };
+ 
+     ItemsListView.ItemsSource = ListOfSomething;
+ 
+     ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
+ 
+     return newPost;
+ }        */

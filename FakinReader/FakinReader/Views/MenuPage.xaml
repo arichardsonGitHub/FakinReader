@@ -10,8 +10,9 @@
 
     <StackLayout VerticalOptions="FillAndExpand">
 
-        <controls:AccountManagementMenu />
+        <controls:AccountManagementMenu VerticalOptions="StartAndExpand" />
 
-        <controls:MainMenu />
+        <controls:MainMenu VerticalOptions="StartAndExpand" />
+        
     </StackLayout>
 </ContentPage>
