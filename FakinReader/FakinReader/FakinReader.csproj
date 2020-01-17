@@ -6,15 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="old samples\**" />
+    <EmbeddedResource Remove="old samples\**" />
+    <None Remove="old samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Models\Item.cs" />
-    <Compile Remove="old samples\IDataStore.cs" />
-    <Compile Remove="old samples\Item.cs" />
-    <Compile Remove="old samples\ItemDetailPage.xaml.cs" />
-    <Compile Remove="old samples\ItemDetailViewModel.cs" />
-    <Compile Remove="old samples\ItemsViewModel.cs" />
-    <Compile Remove="old samples\MainHomePage.xaml.cs" />
-    <Compile Remove="old samples\MockDataStore1.cs" />
-    <Compile Remove="old samples\NewItemPage.xaml.cs" />
     <Compile Remove="Services\IDataStore.cs" />
     <Compile Remove="Services\MockDataStore1.cs" />
     <Compile Remove="ViewModels\AccountManagementViewModel.cs" />
@@ -25,9 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="old samples\ItemDetailPage.xaml" />
-    <EmbeddedResource Remove="old samples\MainHomePage.xaml" />
-    <EmbeddedResource Remove="old samples\NewItemPage.xaml" />
     <EmbeddedResource Remove="Views\ItemDetailPage.xaml" />
     <EmbeddedResource Remove="Views\NewItemPage.xaml" />
   </ItemGroup>
@@ -117,9 +112,5 @@
     <EmbeddedResource Update="Controls\AccountManagementMenu.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="old samples\" />
   </ItemGroup>
 </Project>

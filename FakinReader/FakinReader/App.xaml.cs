@@ -11,8 +11,6 @@ namespace FakinReader
         {
             InitializeComponent();
 
-            //DependencyService.Register<MockDataStore1>();
-
             DependencyService.Register<SettingsManager>();
 
             DependencyService.Register<AccountManager>();
