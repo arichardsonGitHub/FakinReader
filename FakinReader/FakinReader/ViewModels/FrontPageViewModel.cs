@@ -15,7 +15,7 @@ namespace FakinReader.ViewModels
         {
             Title = "";
 
-            RefreshPosts();
+            Refresh();
         }
         #endregion Constructors
 
@@ -38,25 +38,48 @@ namespace FakinReader.ViewModels
         {
             Listing<Post> newItems = null;
 
-            await Task.Run(() =>
-             {
-                 var reddit = AuthenticationManager.Reddit;
+            if (AuthenticationManager.Reddit != null)
+            {
+                await Task.Run(() =>
+                 {
+                     var reddit = AuthenticationManager.Reddit;
 
-                 newItems = reddit.FrontPage.GetPosts(max: 100);
-             });
+                     newItems = reddit.FrontPage.GetPosts(max: 100);
+                 });
+            }
 
             return newItems;
         }
 
-        public async void RefreshPosts()
+        public async Task<Subreddit> GetFrontPage()
+        {
+            if (AuthenticationManager.Reddit != null)
+            {
+                var reddit = AuthenticationManager.Reddit;
+
+                return reddit.FrontPage;
+            }
+
+            return null;
+        }
+
+        public async void Refresh()
         {
             var newPosts = new ObservableCollection<Post>();
 
-            var refreshFrontPageItems = await GetFrontPageItems();
+            var frontPage = await GetFrontPage();
 
-            await refreshFrontPageItems.ForEachAsync(post => { newPosts.Add(post); });
+            if (frontPage != null)
+            {
+                Title = frontPage.DisplayName;
 
-            FrontPageItems = newPosts;
+                await Task.Run(() =>
+               {
+                   var refreshedPosts = frontPage.GetPosts(max: 100);
+
+                   refreshedPosts.ForEachAsync(post => { newPosts.Add(post); });
+               });
+            }
         }
         #endregion Methods
     }

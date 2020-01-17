@@ -56,7 +56,8 @@ namespace FakinReader.Services
             }
             else
             {
-                return null;
+                return new Reddit();
+                //return null;
             }
         }
         #endregion Methods

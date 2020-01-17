@@ -16,7 +16,6 @@
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
 
-            <ResourceDictionary Source="Themes/LightTheme.xaml" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
