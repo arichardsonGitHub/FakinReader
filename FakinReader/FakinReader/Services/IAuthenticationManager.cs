@@ -1,4 +1,5 @@
 ﻿using RedditSharp;
+using Reddit;
 
 namespace FakinReader.Services
 {
@@ -7,7 +8,8 @@ namespace FakinReader.Services
         #region Properties
         IAccountManager AccountManager { get; }
         AuthProvider AuthProvider { get; }
-        Reddit Reddit { get; }
+        RedditSharp.Reddit Reddit { get; }
+        Reddit.RedditClient RedditClient { get; }
 
         string RedirectUrl { get; }
         #endregion Properties

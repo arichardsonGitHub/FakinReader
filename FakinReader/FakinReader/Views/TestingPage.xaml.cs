@@ -41,13 +41,11 @@ namespace FakinReader.Views
                 OnPropertyChanged(nameof(IsRefreshing));
             }
         }
-
         public ObservableCollection<Post> ListOfSomething
         {
             get { return _listOfSomething; }
             set { _listOfSomething = value; OnPropertyChanged(nameof(ListOfSomething)); }
         }
-
         public ICommand RefreshCommand
         {
             get
@@ -62,7 +60,7 @@ namespace FakinReader.Views
                 });
             }
         }
-
+        private IAuthenticationManager AuthenticationManager => DependencyService.Get<IAuthenticationManager>();
         private MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         #endregion Properties
 
@@ -76,8 +74,6 @@ namespace FakinReader.Views
         }
         private void OnDoSomethingButtonClickedAsync(object sender, EventArgs e)
         {
-
-            //Task.WaitAll(RootPage.NavigateFromMenu((int)MenuItemType.AddAccount));
         }
 
         private void SetLastActiveUser(string userName)
@@ -112,37 +108,30 @@ namespace FakinReader.Views
 //                //    UserAgent = USER_AGENT
 //                //};
 
-//                RefreshTokenWebAgent rwa = new RefreshTokenWebAgent(refreshToken, CLIENT_ID, null, REDIRECT_URL)
-//                {
-//                    UserAgent = USER_AGENT
-//                };
+// RefreshTokenWebAgent rwa = new RefreshTokenWebAgent(refreshToken, CLIENT_ID, null, REDIRECT_URL)
+// { UserAgent = USER_AGENT };
 
-//                Reddit reddit = new Reddit(rwa, true);
+// Reddit reddit = new Reddit(rwa, true);
 
-//                var subredditTask = reddit.GetSubredditAsync("/r/drums");
+// var subredditTask = reddit.GetSubredditAsync("/r/drums");
 
-//                var posts = new List<Post>();
+// var posts = new List<Post>();
 
-//                var subredditResult = await subredditTask;
+// var subredditResult = await subredditTask;
 
-//                var thePosts = subredditResult.GetPosts(Subreddit.Sort.Top, 20).Take(20);
+// var thePosts = subredditResult.GetPosts(Subreddit.Sort.Top, 20).Take(20);
 
-//                thePosts.ForEach(post => { posts.Add(post); });
+// thePosts.ForEach(post => { posts.Add(post); });
 
-//                ItemsListView.ItemsSource = posts;
+// ItemsListView.ItemsSource = posts;
 
-//                ItemCount.Text = $"Posts ({posts.Count.ToString()})";
-//            }
-//            catch (Exception exception)
-//            {
-//            }
-//        }
+// ItemCount.Text = $"Posts ({posts.Count.ToString()})"; } catch (Exception exception) { } }
 
 //private async Task<TokensFromAuthorization> GetTokensFromAuthorizationCodeAsync(string code)
 //{
 //    AuthProvider authProvider = new AuthProvider(CLIENT_ID, null, REDIRECT_URL);
 
-//    var getRefreshToken = authProvider.GetOAuthRefreshTokenFromCodeAsync(code);
+// var getRefreshToken = authProvider.GetOAuthRefreshTokenFromCodeAsync(code);
 
 //    return await getRefreshToken;
 //}
@@ -151,36 +140,36 @@ namespace FakinReader.Views
 //{
 //    //var account = AccountStore.Create().FindAccountsForService(Constants.AppName).FirstOrDefault();
 
-//    try
-//    {
-//        //Application.Current.Properties["someBetterNameThanAccessToken"] = tokensFromAuthorization.AccessToken;
-//        //Application.Current.Properties["someBetterNameThanRefreshToken"] = tokensFromAuthorization.RefreshToken;
+// try { //Application.Current.Properties["someBetterNameThanAccessToken"] =
+// tokensFromAuthorization.AccessToken;
+// //Application.Current.Properties["someBetterNameThanRefreshToken"] = tokensFromAuthorization.RefreshToken;
 
-//        var accessToken = Application.Current.Properties["someBetterNameThanAccessToken"].ToString();
-//        var refreshToken = Application.Current.Properties["someBetterNameThanRefreshToken"].ToString();
+// var accessToken = Application.Current.Properties["someBetterNameThanAccessToken"].ToString(); var
+// refreshToken = Application.Current.Properties["someBetterNameThanRefreshToken"].ToString();
 
-//        IsRefreshing = true;
+// IsRefreshing = true;
 
-//        //var webAgent = new WebAgent(accessToken: tokensFromAuthorization.AccessToken, userAgent: USER_AGENT);
-//        var webAgent = new RefreshTokenWebAgent(refreshToken: refreshToken, CLIENT_ID, null, REDIRECT_URL, USER_AGENT, accessToken);
+// //var webAgent = new WebAgent(accessToken: tokensFromAuthorization.AccessToken, userAgent:
+// USER_AGENT); var webAgent = new RefreshTokenWebAgent(refreshToken: refreshToken, CLIENT_ID, null,
+// REDIRECT_URL, USER_AGENT, accessToken);
 
-//        var reddit = new Reddit(webAgent, true);
+// var reddit = new Reddit(webAgent, true);
 
-//        var myPosts = reddit.User.GetPosts(max: 30);
+// var myPosts = reddit.User.GetPosts(max: 30);
 
-//        var myComments = reddit.User.GetComments(max: 100);
+// var myComments = reddit.User.GetComments(max: 100);
 
-//        var mySubreddits = reddit.User.GetSubscribedSubreddits(max: 200);
+// var mySubreddits = reddit.User.GetSubscribedSubreddits(max: 200);
 
-//        var rSlashAll = reddit.RSlashAll.GetPosts(max: 200);
+// var rSlashAll = reddit.RSlashAll.GetPosts(max: 200);
 
-//        ListOfSomething = new ObservableCollection<Subreddit>();
+// ListOfSomething = new ObservableCollection<Subreddit>();
 
-//        await mySubreddits.ForEachAsync(post => { ListOfSomething.Add(post); });
+// await mySubreddits.ForEachAsync(post => { ListOfSomething.Add(post); });
 
-//        ItemsListView.ItemsSource = ListOfSomething.OrderBy(x => x.DisplayName);
+// ItemsListView.ItemsSource = ListOfSomething.OrderBy(x => x.DisplayName);
 
-//        ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
+// ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
 
 //        IsRefreshing = false;
 //    }
@@ -228,21 +217,21 @@ namespace FakinReader.Views
  private async Task<Post> AddAPost()
  {
      var reddit = AuthenticationManager.GetRedditObject();
- 
+
      var drumsSubredditTask = reddit.GetSubredditAsync("drums");
- 
+
      var drumsSubreddit = drumsSubredditTask.Result;
- 
+
      var newPost = await drumsSubreddit.SubmitPostAsync("Just testing", "https://forums.xamarin.com/discussion/169887/how-to-fix-xamarin-forms-build-error-failed-to-create-javatypeinfo-for-class");
- 
+
      ListOfSomething = new ObservableCollection<Post>
      {
          newPost
      };
- 
+
      ItemsListView.ItemsSource = ListOfSomething;
- 
+
      ItemCount.Text = $"Items ({ListOfSomething.Count.ToString()})";
- 
+
      return newPost;
  }        */
