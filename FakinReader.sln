@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakinReader.Android", "Faki
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedditSharp", "RedditSharp\RedditSharp\RedditSharp.csproj", "{5048202D-40D3-4AE8-88CF-967637CF9D76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakinReaderAndroid", "FakinReaderAndroid\FakinReaderAndroid.csproj", "{A31BB51C-4412-42B2-80DD-1F55E9348F04}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,24 +61,6 @@ Global
 		{5048202D-40D3-4AE8-88CF-967637CF9D76}.Release|iPhone.Build.0 = Release|Any CPU
 		{5048202D-40D3-4AE8-88CF-967637CF9D76}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{5048202D-40D3-4AE8-88CF-967637CF9D76}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|iPhone.Deploy.0 = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Debug|iPhoneSimulator.Deploy.0 = Debug|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|iPhone.Build.0 = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|iPhone.Deploy.0 = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
-		{A31BB51C-4412-42B2-80DD-1F55E9348F04}.Release|iPhoneSimulator.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
