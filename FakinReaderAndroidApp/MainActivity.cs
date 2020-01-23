@@ -39,7 +39,8 @@ namespace FakinReaderAndroidApp
 
             if (id == Resource.Id.nav_camera)
             {
-                // Handle the camera action
+                //just playing around here
+                Xamarin.Essentials.Flashlight.TurnOnAsync();
             }
             else if (id == Resource.Id.nav_gallery)
             {
@@ -94,7 +95,7 @@ namespace FakinReaderAndroidApp
 
             var floatingActionButton = FindViewById<FloatingActionButton>(Resource.Id.fab);
 
-            floatingActionButton.Click += FabOnClick;
+            floatingActionButton.Click += FloatingActionButtonOnClick;
 
             var drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
 
@@ -108,11 +109,13 @@ namespace FakinReaderAndroidApp
 
             navigationView.SetNavigationItemSelectedListener(this);
         }
-        private void FabOnClick(object sender, EventArgs eventArgs)
+        private void FloatingActionButtonOnClick(object sender, EventArgs eventArgs)
         {
             var view = (View)sender;
 
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong).SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
+                .SetAction("Action", (View.IOnClickListener)null)
+                .Show();
         }
         #endregion Methods
     }
