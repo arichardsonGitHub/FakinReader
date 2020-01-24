@@ -7,6 +7,7 @@ using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using System;
+using Android.Support.V7.Widget;
 
 namespace FakinReaderAndroidApp
 {
@@ -35,27 +36,29 @@ namespace FakinReaderAndroidApp
         }
         public bool OnNavigationItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
+            switch (item.ItemId)
+            {
+                case Resource.Id.nav_camera:
+                    break;
 
-            if (id == Resource.Id.nav_camera)
-            {
-                //just playing around here
-                Xamarin.Essentials.Flashlight.TurnOnAsync();
-            }
-            else if (id == Resource.Id.nav_gallery)
-            {
-            }
-            else if (id == Resource.Id.nav_slideshow)
-            {
-            }
-            else if (id == Resource.Id.nav_manage)
-            {
-            }
-            else if (id == Resource.Id.nav_share)
-            {
-            }
-            else if (id == Resource.Id.nav_send)
-            {
+                case Resource.Id.nav_gallery:
+                    break;
+
+                case Resource.Id.nav_slideshow:
+                    break;
+
+                case Resource.Id.nav_manage:
+                    break;
+
+                case Resource.Id.nav_share:
+                    break;
+
+                case Resource.Id.nav_send:
+                    break;
+
+                case Resource.Id.nav_test:
+                    StartActivity(typeof(TestingActivity));
+                    break;
             }
 
             var drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
@@ -89,11 +92,11 @@ namespace FakinReaderAndroidApp
 
             SetContentView(Resource.Layout.activity_main);
 
-            Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
 
             SetSupportActionBar(toolbar);
 
-            var floatingActionButton = FindViewById<FloatingActionButton>(Resource.Id.fab);
+            var floatingActionButton = FindViewById<FloatingActionButton>(Resource.Id.floatingActionButton);
 
             floatingActionButton.Click += FloatingActionButtonOnClick;
 
